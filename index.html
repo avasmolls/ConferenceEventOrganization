@@ -15,13 +15,93 @@
         <!-- Bootstrap -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+        <!-- Importing Inter font from Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
         <!-- todo: Add custom styles here -->
         <style> 
-                
+            body {
+                font-family: 'Inter', sans-serif;
+                color: #000;
+            }
+            .site-title {
+                font-weight: 700;
+                font-size: clamp(2rem, 5vw, 3rem);
+                letter-spacing: -0.05cm;
+                text-transform: uppercase;
+                line-height: 1;
+            }
+
+            .navbar .nav-link {
+                color: #000;
+                font-size: 0.95rem
+            }
+
+            .navbar .nav-link.active {
+                font-weight: 700;
+            }
+
+           /* Image placeholders */
+            .placeholder-img {
+                background-color: #d9d9d9;
+                width: 100%;
+             }
+             .placeholder-hero {
+                height: 400px;
+             }
+             .placeholder-banner {
+                height: 113px;
+             }
+
+             /* Header */
+             .hero-header {
+                font-weight: 700;
+                font-size: clamp(2.5rem, 8vw, 5.5rem);
+                line-height: 1.2;
+                text-transform: uppercase;
+                margin: 0;
+             }
+
+             /* Subheader */
+             .hero-sub {
+                font-weight: 700;
+                font-size: clamp(1rem, 2vw, 1.4rem);
+                text-transform: uppercase;
+                margin: 0
+             }       
         </style>
     </head>
     
     <body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand py-3">
+            <div class="container">
+                <a class="navbar-brand site-title" href="index.html">Attendee Management</a>
+
+                <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="signup.html">Sign Up</a>
+                </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+         <main class = "container">
+            <div class="placeholder-img placeholder-hero"></div>
+
+            <h1 class = "hero-header">Conference Event Organizing</h1>
+            <p class = "hero-sub">
+                Everything you need to organize a successful conference—from managing
+                attendees to keeping event details organized and accessible.
+            </p>
+
+            <div class = "placeholder-img placeholder-banner mb-5"></div>
+         </main>
 
     </body>
 
