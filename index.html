@@ -28,11 +28,12 @@
             .site-title {
                 font-weight: 700;
                 font-size: clamp(2rem, 5vw, 3rem);
-                letter-spacing: -0.05cm;
+                letter-spacing: -0.04cm;
                 text-transform: uppercase;
                 line-height: 1;
             }
 
+            /* Navigation */
             .navbar .nav-link {
                 color: #000;
                 font-size: 0.95rem
@@ -40,6 +41,10 @@
 
             .navbar .nav-link.active {
                 font-weight: 700;
+            }
+
+            .navbar .nav-link:hover {
+                color: #ff4d00;
             }
 
            /* Image placeholders */
@@ -69,7 +74,21 @@
                 font-size: clamp(1rem, 2vw, 1.4rem);
                 text-transform: uppercase;
                 margin: 0
-             }       
+             }  
+             
+             /* Button for call to action */
+             .btn-cta {
+                background-color: #ff4d00;
+                color: #fff;
+                border: none;
+                font-weight: 700;
+                text-transform: uppercase;
+             }
+
+             .btn-cta:hover {
+                background-color: #000;
+                color: #fff
+             }
         </style>
     </head>
     
@@ -99,6 +118,8 @@
                 Everything you need to organize a successful conference—from managing
                 attendees to keeping event details organized and accessible.
             </p>
+
+            <a href="signup.html" class = "btn btn-cta btn-lg rounded-0mt-4 px-5">Sign Up Now</a>
 
             <div class = "placeholder-img placeholder-banner mb-5"></div>
          </main>
