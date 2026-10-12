@@ -60,6 +60,12 @@
   var attendees = [];     /* the JSON register */
   var editingId = null;   /* non-null while updating an existing record */
 
+  /* form.reset() fires a 'reset' event, and that handler clears the success
+     banner. After a successful submit we reset the form and then show the
+     banner, so without this flag the handler would wipe the confirmation the
+     user is meant to read. Set only for the programmatic reset. */
+  var keepBannerThroughReset = false;
+
   /* =========================================================== VALIDATION
      One rule object per field. Each returns an error string, or '' if valid.
      Keeping them in a table means the summary, the inline messages and the
@@ -477,6 +483,7 @@
     resetEditing();
     renderRoster();
 
+    keepBannerThroughReset = true;
     form.reset();
     clearStates();
     updateMeter();
@@ -536,11 +543,16 @@
   });
 
   form.addEventListener('reset', function () {
+    /* Read and clear the flag now; the timeout runs after the submit handler
+       has finished and would otherwise see a stale value. */
+    var keepBanner = keepBannerThroughReset;
+    keepBannerThroughReset = false;
+
     window.setTimeout(function () {
       clearStates();
       resetEditing();
       updateMeter();
-      if (successBanner) successBanner.hidden = true;
+      if (successBanner && !keepBanner) successBanner.hidden = true;
     }, 0);
   });
 
