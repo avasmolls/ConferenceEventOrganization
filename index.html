@@ -1,596 +1,136 @@
-<!DOCTYPE html>
 <!--
-  ============================================================================
-  CONVERGE '26  —  index.html  (Storefront Homepage)
-  IST 256 Team Project · Penn State
-  ----------------------------------------------------------------------------
-  Visual design + CSS  : Chetan Konathala   -> css/styles.css
-  Structure / content   : team
-  ----------------------------------------------------------------------------
-  Deliverable checklist covered by this page:
-    [x] Storefront homepage based on the chosen topic (Conference Event
-        Organizing / Attendee Management)
-    [x] Styled with custom CSS *and* Bootstrap 5.3
-    [x] Navigation menu linking Home <-> Attendee Registration (sign-up)
-  ============================================================================
+1. A storefront homepage based on given topics
+    - Styled with CSS and Bootstrap
+    - Has a menu to navigate from page to page on your website -- initially this can just be "Home" and "User Signup" 
+      or whatever suits you for the name of these headings
 -->
-<html lang="en" data-theme="dark" data-bs-theme="dark" class="no-js">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="CONVERGE '26 — the global conference on event technology and attendee operations. June 4-6, 2026, San Francisco.">
-  <meta name="theme-color" content="#08080a">
-  <title>CONVERGE &rsquo;26 &mdash; Conference Event Organizing</title>
+<!DOCTYPE html>
+<html lang="en">
 
-  <!-- Bootstrap 5.3 (grid + utilities + reboot) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Attendee Management</title>
 
-  <!-- Typefaces: Inter Tight (display) / Inter (body) / JetBrains Mono (labels) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
-  <!-- Custom design system — loaded last so it wins over Bootstrap -->
-  <link rel="stylesheet" href="css/styles.css">
-</head>
+        <!-- Importing Inter font from Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<body>
-  <a class="skip" href="#main">Skip to main content</a>
-  <div class="grain" aria-hidden="true"></div>
+        <!-- todo: Add custom styles here -->
+        <style> 
+            body {
+                font-family: 'Inter', sans-serif;
+                color: #000;
+            }
+            .site-title {
+                font-weight: 700;
+                font-size: clamp(2rem, 5vw, 3rem);
+                letter-spacing: -0.04cm;
+                text-transform: uppercase;
+                line-height: 1;
+            }
 
-  <!-- ====================================================== NAVIGATION -->
-  <header class="nav-x" id="siteNav">
-    <div class="shell">
-      <div class="nav-x__inner">
+            /* Navigation */
+            .navbar .nav-link {
+                color: #000;
+                font-size: 0.95rem
+            }
 
-        <a class="brand" href="index.html" aria-label="CONVERGE 26 home">
-          <span class="brand__mark" aria-hidden="true"></span>
-          <span>
-            <span class="brand__word">Converge<span>&rsquo;26</span></span>
-            <span class="brand__sub">Attendee Ops</span>
-          </span>
-        </a>
+            .navbar .nav-link.active {
+                font-weight: 700;
+            }
 
-        <button class="btn-icon nav-toggle" type="button" id="navToggle"
-                aria-expanded="false" aria-controls="siteMenu" aria-label="Toggle navigation menu">
-          <span class="nav-toggle__bar" aria-hidden="true"></span>
-          <span class="nav-toggle__bar" aria-hidden="true"></span>
-          <span class="nav-toggle__bar" aria-hidden="true"></span>
-        </button>
+            .navbar .nav-link:hover {
+                color: #ff4d00;
+            }
 
-        <div class="nav-x__nav" id="siteMenu">
-          <ul class="nav-x__links">
-            <li><a class="nav-x__link is-active" href="index.html" aria-current="page">Home</a></li>
-            <li><a class="nav-x__link" href="#agenda">Agenda</a></li>
-            <li><a class="nav-x__link" href="#speakers">Speakers</a></li>
-            <li><a class="nav-x__link" href="#portal">Attendees</a></li>
-            <li><a class="nav-x__link" href="#venue">Venue</a></li>
-          </ul>
-          <a class="btn-x btn-x--primary btn-x--sm" href="signup.html">Register</a>
-        </div>
+           /* Image placeholders */
+            .placeholder-img {
+                background-color: #d9d9d9;
+                width: 100%;
+             }
+             .placeholder-hero {
+                height: 400px;
+                margin-bottom: 2rem;
+             }
+             .placeholder-banner {
+                height: 350;
+                margin-top: 2rem;
+             }
 
-        <div class="nav-x__actions">
-          <button class="btn-icon" type="button" id="themeToggle"
-                  aria-label="Switch colour theme" title="Switch colour theme">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.7" stroke-linecap="round" aria-hidden="true" class="icon-moon">
-              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
-            </svg>
-          </button>
-          <a class="btn-x btn-x--primary btn-x--sm nav-x__cta-desktop" href="signup.html">
-            Register <span class="btn-x__arrow" aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
+             /* Header */
+             .hero-header {
+                font-weight: 700;
+                font-size: clamp(2.5rem, 8vw, 5.5rem);
+                line-height: 1.2;
+                text-transform: uppercase;
+                margin: 0;
+             }
 
-      </div>
-    </div>
-  </header>
+             /* Subheader */
+             .hero-sub {
+                font-weight: 700;
+                font-size: clamp(1rem, 2vw, 1.4rem);
+                text-transform: uppercase;
+                margin: 0
+             }  
+             
+             /* Button for call to action */
+             .btn-cta {
+                background-color: #ff4d00;
+                color: #fff;
+                border: none;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-top: 2rem;
+             }
 
-  <main id="main">
+             .btn-cta:hover {
+                background-color: #000;
+                color: #fff
+             }
+        </style>
+    </head>
+    
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand py-3">
+            <div class="container">
+                <a class="navbar-brand site-title" href="index.html">Attendee Management</a>
 
-    <!-- ========================================================== HERO -->
-    <section class="hero">
-      <div class="aurora aurora--a" aria-hidden="true"></div>
-      <div class="aurora aurora--b" aria-hidden="true"></div>
-      <div class="grid-lines" aria-hidden="true"></div>
-
-      <div class="shell hero__inner">
-        <div class="row g-5 align-items-center">
-          <div class="col-lg-7">
-
-            <div class="hero__meta reveal">
-              <span class="chip chip--signal chip--live">Registration open</span>
-              <span class="u-mono u-faint">04&ndash;06 Jun 2026</span>
-              <span class="u-mono u-faint">Moscone West &middot; San Francisco</span>
+                <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="signup.html">Sign Up</a>
+                </li>
+                </ul>
             </div>
+        </nav>
 
-            <h1 class="u-display hero__title reveal" data-delay="1">
-              Where the<br>
-              world&rsquo;s event<br>
-              <span class="outline">teams</span> <span class="fill-signal">converge.</span>
-            </h1>
-
-            <p class="u-lead reveal" data-delay="2">
-              Three days of sessions, workshops and studio time on the operational
-              craft behind large-scale conferences &mdash; registration systems,
-              attendee data, badge logistics and the floor itself.
+        <!-- Main Content -->
+         <main class = "container">
+             <div class="placeholder-img placeholder-hero">
+                 <img src="image1.jpg"
+                      alt="Conference" style="width: 100%; height: 100%; object-fit: cover;">
+             </div>
+            <h1 class = "hero-header">Conference Event Organizing</h1>
+            <p class = "hero-sub">
+                Everything you need to organize a successful conference—from managing
+                attendees to keeping event details organized and accessible.
             </p>
 
-            <div class="hero__actions reveal" data-delay="3">
-              <a class="btn-x btn-x--primary btn-x--lg" href="signup.html">
-                Register as attendee <span class="btn-x__arrow" aria-hidden="true">&rarr;</span>
-              </a>
-              <a class="btn-x btn-x--lg" href="#agenda">View the agenda</a>
-            </div>
+            <a href="signup.html" class = "btn btn-cta btn-lg rounded-0mt-4 px-5">Sign Up Now</a>
 
-          </div>
+             <div class="placeholder-img placeholder-banner mb-5">
+                 <img src="image2.jpg" alt="Conference Banner" style="width: 100%; height: 100%; object-fit: cover;">
+             </div>
+         </main>
 
-          <div class="col-lg-5">
-            <!-- Hero visual: an attendee credential, drawn entirely in CSS. -->
-            <div class="badge-card reveal" data-delay="2" role="img"
-                 aria-label="Sample CONVERGE 26 attendee badge for A. Delgado, Operations Lead, full pass.">
-              <div class="badge-card__head">
-                <span class="badge-card__event">Converge<br>&rsquo;26</span>
-                <span class="u-mono u-faint">No.&nbsp;0417</span>
-              </div>
-              <p class="badge-card__name">Ava<br>Delgado</p>
-              <p class="badge-card__role">Operations Lead &middot; Northwind Events</p>
-              <div class="badge-card__foot">
-                <span class="badge-card__qr" aria-hidden="true"></span>
-                <span class="badge-card__tier">Full Pass<br>All Tracks</span>
-              </div>
-            </div>
-          </div>
-        </div>
+    </body>
 
-        <!-- Stat row -->
-        <dl class="stats reveal" data-delay="3">
-          <div class="stat">
-            <dd class="stat__num" data-count="4200">0<sup>+</sup></dd>
-            <dt class="stat__label">Attendees expected</dt>
-          </div>
-          <div class="stat">
-            <dd class="stat__num" data-count="86">0</dd>
-            <dt class="stat__label">Sessions &amp; workshops</dt>
-          </div>
-          <div class="stat">
-            <dd class="stat__num" data-count="42">0</dd>
-            <dt class="stat__label">Countries represented</dt>
-          </div>
-          <div class="stat">
-            <dd class="stat__num" data-count="3">0</dd>
-            <dt class="stat__label">Days, one venue</dt>
-          </div>
-        </dl>
-      </div>
-    </section>
-
-    <!-- ======================================================= MARQUEE -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__track">
-        <span class="marquee__item">Keynotes</span>
-        <span class="marquee__item">Registration Ops</span>
-        <span class="marquee__item">Badge &amp; Access</span>
-        <span class="marquee__item">Attendee Data</span>
-        <span class="marquee__item">Sponsor Floor</span>
-        <span class="marquee__item">Hospitality</span>
-      </div>
-      <div class="marquee__track">
-        <span class="marquee__item">Keynotes</span>
-        <span class="marquee__item">Registration Ops</span>
-        <span class="marquee__item">Badge &amp; Access</span>
-        <span class="marquee__item">Attendee Data</span>
-        <span class="marquee__item">Sponsor Floor</span>
-        <span class="marquee__item">Hospitality</span>
-      </div>
-    </div>
-
-    <!-- ================================================ 01 WHY ATTEND -->
-    <section class="section" id="why">
-      <div class="shell">
-        <div class="eyebrow reveal">
-          <span class="eyebrow__num">01</span><span>Why converge</span>
-          <span class="eyebrow__line" aria-hidden="true"></span>
-        </div>
-
-        <div class="row g-5 align-items-end mb-5">
-          <div class="col-lg-7">
-            <h2 class="u-h2 reveal">Built for the people who run the room</h2>
-          </div>
-          <div class="col-lg-5">
-            <p class="u-lead reveal" data-delay="1">
-              Not a marketing conference. A working one &mdash; for organisers,
-              registration leads and the teams who own attendee experience.
-            </p>
-          </div>
-        </div>
-
-        <div class="row g-4">
-          <div class="col-md-6 col-lg-3">
-            <article class="card-x reveal" data-delay="1">
-              <span class="card-x__index">01</span>
-              <span class="card-x__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/>
-                </svg>
-              </span>
-              <h3 class="card-x__title">Attendee management</h3>
-              <p class="card-x__body">Hands-on tracks on intake forms, validation, de-duplication and clean attendee records that survive the day of the event.</p>
-            </article>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <article class="card-x reveal" data-delay="2">
-              <span class="card-x__index">02</span>
-              <span class="card-x__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/>
-                </svg>
-              </span>
-              <h3 class="card-x__title">Three-day agenda</h3>
-              <p class="card-x__body">Eighty-six sessions across six tracks, with studio hours where you bring your own registration stack and rebuild it.</p>
-            </article>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <article class="card-x reveal" data-delay="3">
-              <span class="card-x__index">03</span>
-              <span class="card-x__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
-              </span>
-              <h3 class="card-x__title">Open data standards</h3>
-              <p class="card-x__body">Every attendee record on this site is stored and exported as portable JSON &mdash; no proprietary lock-in, no export fees.</p>
-            </article>
-          </div>
-          <div class="col-md-6 col-lg-3">
-            <article class="card-x reveal" data-delay="4">
-              <span class="card-x__index">04</span>
-              <span class="card-x__icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
-                </svg>
-              </span>
-              <h3 class="card-x__title">Hospitality included</h3>
-              <p class="card-x__body">All passes include breakfast, lunch, the Thursday reception and access to the quiet-room and childcare programme.</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <hr class="rule">
-
-    <!-- ===================================================== 02 AGENDA -->
-    <section class="section" id="agenda">
-      <div class="shell">
-        <div class="eyebrow reveal">
-          <span class="eyebrow__num">02</span><span>Agenda</span>
-          <span class="eyebrow__line" aria-hidden="true"></span>
-        </div>
-
-        <h2 class="u-h2 mb-4 reveal">Day one &mdash; Thursday, 4 June</h2>
-
-        <div class="daybar reveal" role="group" aria-label="Choose agenda day">
-          <button class="daybar__btn is-active" type="button">Day 01</button>
-          <button class="daybar__btn" type="button">Day 02</button>
-          <button class="daybar__btn" type="button">Day 03</button>
-        </div>
-
-        <div class="agenda reveal" data-delay="1">
-          <div class="agenda__row">
-            <span class="agenda__time">08:00</span>
-            <div>
-              <h3 class="agenda__title">Doors, badge pickup &amp; breakfast</h3>
-              <p class="agenda__who">Moscone West, Level 1 Concourse</p>
-            </div>
-            <span class="chip agenda__tag">Registration</span>
-          </div>
-          <div class="agenda__row">
-            <span class="agenda__time">09:30</span>
-            <div>
-              <h3 class="agenda__title">Opening keynote: the attendee is the product</h3>
-              <p class="agenda__who">Priya Raghunathan &middot; VP Events, Meridian Group</p>
-            </div>
-            <span class="chip chip--signal agenda__tag">Keynote</span>
-          </div>
-          <div class="agenda__row">
-            <span class="agenda__time">11:00</span>
-            <div>
-              <h3 class="agenda__title">Form design that survives 4,000 submissions</h3>
-              <p class="agenda__who">Daniel Okonkwo &middot; Head of Registration, Hemlock Conf</p>
-            </div>
-            <span class="chip agenda__tag">Workshop</span>
-          </div>
-          <div class="agenda__row">
-            <span class="agenda__time">13:00</span>
-            <div>
-              <h3 class="agenda__title">Lunch &amp; sponsor floor opens</h3>
-              <p class="agenda__who">Exhibit Hall B &middot; 64 exhibitors</p>
-            </div>
-            <span class="chip agenda__tag">Break</span>
-          </div>
-          <div class="agenda__row">
-            <span class="agenda__time">14:30</span>
-            <div>
-              <h3 class="agenda__title">Clean records: validation, dedupe and the JSON layer</h3>
-              <p class="agenda__who">Mara Lindqvist &middot; Data Lead, Northwind Events</p>
-            </div>
-            <span class="chip agenda__tag">Technical</span>
-          </div>
-          <div class="agenda__row">
-            <span class="agenda__time">16:00</span>
-            <div>
-              <h3 class="agenda__title">Studio hours: bring your registration stack</h3>
-              <p class="agenda__who">Rooms 2010&ndash;2024 &middot; Sign-up at the desk</p>
-            </div>
-            <span class="chip agenda__tag">Studio</span>
-          </div>
-          <div class="agenda__row">
-            <span class="agenda__time">18:30</span>
-            <div>
-              <h3 class="agenda__title">Welcome reception</h3>
-              <p class="agenda__who">Terrace, Level 3 &middot; Included with all passes</p>
-            </div>
-            <span class="chip agenda__tag">Social</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <hr class="rule">
-
-    <!-- =================================================== 03 SPEAKERS -->
-    <section class="section section--surface" id="speakers">
-      <div class="shell">
-        <div class="eyebrow reveal">
-          <span class="eyebrow__num">03</span><span>Speakers</span>
-          <span class="eyebrow__line" aria-hidden="true"></span>
-        </div>
-
-        <div class="row g-5 align-items-end mb-5">
-          <div class="col-lg-7"><h2 class="u-h2 reveal">Forty-two practitioners, no vendor pitches</h2></div>
-          <div class="col-lg-5">
-            <p class="u-lead reveal" data-delay="1">Every speaker runs events for a living. Full roster published in March.</p>
-          </div>
-        </div>
-
-        <div class="row g-4">
-          <div class="col-6 col-md-4 col-lg-3">
-            <article class="speaker reveal" data-delay="1">
-              <div class="speaker__frame" style="--h: 18;">
-                <span class="chip speaker__flag">Keynote</span>
-                <span class="speaker__initials" aria-hidden="true">PR</span>
-              </div>
-              <h3 class="speaker__name">Priya Raghunathan</h3>
-              <p class="speaker__role">VP Events &middot; Meridian</p>
-            </article>
-          </div>
-          <div class="col-6 col-md-4 col-lg-3">
-            <article class="speaker reveal" data-delay="2">
-              <div class="speaker__frame" style="--h: 196;">
-                <span class="chip speaker__flag">Workshop</span>
-                <span class="speaker__initials" aria-hidden="true">DO</span>
-              </div>
-              <h3 class="speaker__name">Daniel Okonkwo</h3>
-              <p class="speaker__role">Registration &middot; Hemlock</p>
-            </article>
-          </div>
-          <div class="col-6 col-md-4 col-lg-3">
-            <article class="speaker reveal" data-delay="3">
-              <div class="speaker__frame" style="--h: 272;">
-                <span class="chip speaker__flag">Technical</span>
-                <span class="speaker__initials" aria-hidden="true">ML</span>
-              </div>
-              <h3 class="speaker__name">Mara Lindqvist</h3>
-              <p class="speaker__role">Data Lead &middot; Northwind</p>
-            </article>
-          </div>
-          <div class="col-6 col-md-4 col-lg-3">
-            <article class="speaker reveal" data-delay="4">
-              <div class="speaker__frame" style="--h: 134;">
-                <span class="chip speaker__flag">Panel</span>
-                <span class="speaker__initials" aria-hidden="true">TA</span>
-              </div>
-              <h3 class="speaker__name">Tomas Alvarez</h3>
-              <p class="speaker__role">Floor Ops &middot; Civic Expo</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <hr class="rule">
-
-    <!-- ========================================== 04 ATTENDEE PORTAL -->
-    <section class="section" id="portal">
-      <div class="shell">
-        <div class="eyebrow reveal">
-          <span class="eyebrow__num">04</span><span>Attendee management</span>
-          <span class="eyebrow__line" aria-hidden="true"></span>
-        </div>
-
-        <div class="row g-5 align-items-center">
-          <div class="col-lg-6">
-            <h2 class="u-h2 reveal">One record per attendee.<br>Yours to export, always.</h2>
-            <p class="u-lead mt-4 reveal" data-delay="1">
-              Registration writes a validated record to the attendee register the
-              moment it is submitted. Review it, correct it, remove it &mdash; and
-              download the whole register as a JSON file whenever you need it.
-            </p>
-            <div class="hero__actions reveal" data-delay="2">
-              <a class="btn-x btn-x--primary" href="signup.html">
-                Open the registration form <span class="btn-x__arrow" aria-hidden="true">&rarr;</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <!-- Static sample of the JSON the sign-up page produces. -->
-            <div class="json reveal" data-delay="2">
-              <div class="json__bar">
-                <span class="json__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                <span class="json__file">data/attendees.json</span>
-              </div>
-              <pre class="json__code"><code><span class="tok-punct">[</span>
-  <span class="tok-punct">{</span>
-    <span class="tok-key">"id"</span><span class="tok-punct">:</span> <span class="tok-str">"ATT-0417"</span><span class="tok-punct">,</span>
-    <span class="tok-key">"fullName"</span><span class="tok-punct">:</span> <span class="tok-str">"Ava Delgado"</span><span class="tok-punct">,</span>
-    <span class="tok-key">"email"</span><span class="tok-punct">:</span> <span class="tok-str">"ava.delgado@northwind.io"</span><span class="tok-punct">,</span>
-    <span class="tok-key">"phone"</span><span class="tok-punct">:</span> <span class="tok-str">"(415) 555-0142"</span><span class="tok-punct">,</span>
-    <span class="tok-key">"age"</span><span class="tok-punct">:</span> <span class="tok-num">34</span><span class="tok-punct">,</span>
-    <span class="tok-key">"affiliation"</span><span class="tok-punct">:</span> <span class="tok-str">"Northwind Events, San Francisco CA"</span><span class="tok-punct">,</span>
-    <span class="tok-key">"tier"</span><span class="tok-punct">:</span> <span class="tok-str">"full"</span><span class="tok-punct">,</span>
-    <span class="tok-key">"checkedIn"</span><span class="tok-punct">:</span> <span class="tok-bool">false</span><span class="tok-punct">,</span>
-    <span class="tok-key">"registeredAt"</span><span class="tok-punct">:</span> <span class="tok-str">"2026-10-08T14:02:11Z"</span>
-  <span class="tok-punct">}</span>
-<span class="tok-punct">]</span></code></pre>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <hr class="rule">
-
-    <!-- ====================================================== 05 VENUE -->
-    <section class="section" id="venue">
-      <div class="shell">
-        <div class="eyebrow reveal">
-          <span class="eyebrow__num">05</span><span>Venue &amp; partners</span>
-          <span class="eyebrow__line" aria-hidden="true"></span>
-        </div>
-
-        <div class="row g-5 mb-5 align-items-center">
-          <div class="col-lg-6">
-            <!-- Team photography: image1.jpg -->
-            <figure class="media media--venue reveal m-0">
-              <img src="image1.jpg" alt="Delegates in the main hall at a conference session." loading="lazy" decoding="async">
-              <figcaption class="media__caption">Moscone West &middot; Main hall</figcaption>
-            </figure>
-          </div>
-          <div class="col-lg-6">
-            <h2 class="u-h3 reveal">Moscone West</h2>
-            <p class="u-lead reveal" data-delay="1">
-              800 Howard Street, San Francisco, CA 94103. Three contiguous floors,
-              step-free throughout, four blocks from Powell Street BART.
-            </p>
-          </div>
-        </div>
-
-        <div class="row g-5 mb-5">
-          <div class="col-lg-3 col-6">
-            <p class="u-mono u-faint mb-2 reveal" data-delay="1">Doors</p>
-            <p class="reveal" data-delay="1">08:00 &ndash; 19:00 daily<br>Badge desk opens 07:30</p>
-          </div>
-          <div class="col-lg-4 col-6">
-            <p class="u-mono u-faint mb-2 reveal" data-delay="2">Accessibility</p>
-            <p class="reveal" data-delay="2">ASL interpretation, live captions, quiet room and on-site childcare on all three days.</p>
-          </div>
-        </div>
-
-        <p class="u-mono u-faint mb-4 reveal">Supported by</p>
-        <div class="logos reveal" data-delay="1">
-          <span class="logos__cell">Northwind</span>
-          <span class="logos__cell">Meridian</span>
-          <span class="logos__cell">Hemlock</span>
-          <span class="logos__cell">Civic Expo</span>
-          <span class="logos__cell">Atlas Rail</span>
-          <span class="logos__cell">Lumen</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======================================================= BANNER -->
-    <section class="section section--tight" style="padding-top: 0;">
-      <div class="shell">
-        <!-- Team photography: image2.jpg -->
-        <figure class="media media--banner reveal m-0">
-          <img src="image2.jpg" alt="Wide view of the conference exhibition floor." loading="lazy" decoding="async">
-          <figcaption class="media__caption">Exhibit Hall B &middot; 64 exhibitors</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- ========================================================== CTA -->
-    <section class="section section--tight">
-      <div class="shell">
-        <div class="cta reveal">
-          <p class="u-mono u-signal mb-4">Early-bird closes 28 February 2026</p>
-          <h2 class="u-h1 u-balance mb-4">Your badge is one form away.</h2>
-          <p class="u-lead mx-auto mb-5" style="max-width: 48ch;">
-            Register in under two minutes. Confirmation and your attendee record
-            are generated immediately.
-          </p>
-          <a class="btn-x btn-x--primary btn-x--lg" href="signup.html">
-            Register as attendee <span class="btn-x__arrow" aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ========================================================== FOOTER -->
-  <footer class="foot">
-    <div class="shell">
-      <div class="row g-5">
-        <div class="col-lg-4">
-          <a class="brand mb-4" href="index.html">
-            <span class="brand__mark" aria-hidden="true"></span>
-            <span>
-              <span class="brand__word">Converge<span>&rsquo;26</span></span>
-              <span class="brand__sub">Attendee Ops</span>
-            </span>
-          </a>
-          <p class="u-muted" style="font-size: var(--t-small); max-width: 34ch;">
-            The global conference on event technology and attendee operations.
-            4&ndash;6 June 2026, Moscone West, San Francisco.
-          </p>
-        </div>
-        <div class="col-6 col-lg-2">
-          <p class="foot__title">Event</p>
-          <ul class="foot__list">
-            <li><a href="#agenda">Agenda</a></li>
-            <li><a href="#speakers">Speakers</a></li>
-            <li><a href="#venue">Venue</a></li>
-            <li><a href="#why">Why attend</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-lg-2">
-          <p class="foot__title">Attend</p>
-          <ul class="foot__list">
-            <li><a href="signup.html">Register</a></li>
-            <li><a href="signup.html#register">Passes &amp; pricing</a></li>
-            <li><a href="signup.html#roster">Attendee register</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-lg-2">
-          <p class="foot__title">Project</p>
-          <ul class="foot__list">
-            <li><a href="https://github.com/avasmolls/ConferenceEventOrganization">Repository</a></li>
-            <li><a href="DESIGN.md">Design system</a></li>
-            <li><a href="README.md">Read me</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-lg-2">
-          <p class="foot__title">Contact</p>
-          <ul class="foot__list">
-            <li><a href="mailto:hello@converge26.example">hello@converge26.example</a></li>
-            <li><a href="tel:+14155550100">+1 (415) 555-0100</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="foot__bar">
-        <span>&copy; 2026 CONVERGE. IST 256 team project &mdash; Penn State. Fictional event.</span>
-        <span class="u-mono">Design system v1.0</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-  <script src="js/app.js"></script>
-</body>
 </html>

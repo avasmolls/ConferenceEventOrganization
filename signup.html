@@ -1,559 +1,93 @@
+<!-- 2. A user-sign-up page
+    - Optionally, you can include a field for a phone number
+    - This must be a separate page from your homepage
+    - Styled with CSS and Bootstrap
+    - Contains the following required fields for user input: name, age, email address, and address
+    - Uses JavaScript to validate user inputs
+    - Uses JSON to store the information a user inputs on this page-->
+
 <!DOCTYPE html>
-<!--
-  ============================================================================
-  CONVERGE '26  —  signup.html  (Attendee Registration)
-  IST 256 Team Project · Penn State
-  ----------------------------------------------------------------------------
-  Visual design + CSS  : Chetan Konathala   -> css/styles.css
-  Form logic / JSON    : team               -> js/signup.js
-  ----------------------------------------------------------------------------
-  COMPATIBILITY NOTE FOR THE JS OWNER
-  The original field ids from the "signup Test" commit are preserved exactly:
-        tbEmail · tbName · tbAge · tbAddress   (+ new optional tbPhone)
-  The global function validateData() is still the submit entry point, so any
-  logic written against the earlier sketch continues to work.
-  Validation styling is driven by Bootstrap's STANDARD classes:
-        .is-invalid  ->  shows the sibling .invalid-feedback
-        .is-valid    ->  shows the sibling .valid-feedback
-  Toggle those classes and the visual states appear. No custom API to learn.
-  ----------------------------------------------------------------------------
-  Deliverable checklist covered by this page:
-    [x] Separate page from the homepage, same navigation bar
-    [x] Styled with custom CSS *and* Bootstrap 5.3
-    [x] Required fields: full name, age, email, address/affiliation (+ phone)
-    [x] JavaScript validation with inline, per-field error messaging
-    [x] Records stored as JSON (live viewer + downloadable attendees.json)
-    [x] Dynamic table/card rendering, update (edit) and delete
-  ============================================================================
--->
-<html lang="en" data-theme="dark" data-bs-theme="dark" class="no-js">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Register as an attendee for CONVERGE '26 — June 4-6, 2026, Moscone West, San Francisco.">
-  <meta name="theme-color" content="#08080a">
-  <title>Attendee Registration &mdash; CONVERGE &rsquo;26</title>
+<html lang="en">
 
-  <!-- Bootstrap 5.3 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Attendee Management</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <!-- todo: Add custom styles here -->
+        <style> 
+                
+        </style>
+    </head>
+    
+    <body>
 
-  <!-- Custom design system — loaded last so it wins over Bootstrap -->
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-
-<body>
-  <a class="skip" href="#register">Skip to the registration form</a>
-  <div class="grain" aria-hidden="true"></div>
-
-  <!-- ====================================================== NAVIGATION -->
-  <!-- Same navigation bar as the homepage, with "Register" marked current. -->
-  <header class="nav-x" id="siteNav">
-    <div class="shell">
-      <div class="nav-x__inner">
-
-        <a class="brand" href="index.html" aria-label="CONVERGE 26 home">
-          <span class="brand__mark" aria-hidden="true"></span>
-          <span>
-            <span class="brand__word">Converge<span>&rsquo;26</span></span>
-            <span class="brand__sub">Attendee Ops</span>
-          </span>
-        </a>
-
-        <button class="btn-icon nav-toggle" type="button" id="navToggle"
-                aria-expanded="false" aria-controls="siteMenu" aria-label="Toggle navigation menu">
-          <span class="nav-toggle__bar" aria-hidden="true"></span>
-          <span class="nav-toggle__bar" aria-hidden="true"></span>
-          <span class="nav-toggle__bar" aria-hidden="true"></span>
-        </button>
-
-        <div class="nav-x__nav" id="siteMenu">
-          <ul class="nav-x__links">
-            <li><a class="nav-x__link" href="index.html">Home</a></li>
-            <li><a class="nav-x__link" href="index.html#agenda">Agenda</a></li>
-            <li><a class="nav-x__link" href="index.html#speakers">Speakers</a></li>
-            <li><a class="nav-x__link is-active" href="signup.html" aria-current="page">Register</a></li>
-            <li><a class="nav-x__link" href="#roster">Attendee register</a></li>
-          </ul>
-        </div>
-
-        <div class="nav-x__actions">
-          <button class="btn-icon" type="button" id="themeToggle"
-                  aria-label="Switch colour theme" title="Switch colour theme">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
-              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
-            </svg>
-          </button>
-          <a class="btn-x btn-x--sm nav-x__cta-desktop" href="index.html#agenda">Agenda</a>
-        </div>
-
-      </div>
-    </div>
-  </header>
-
-  <main id="main">
-
-    <!-- ================================================== PAGE HEADING -->
-    <section class="section section--tight" style="padding-bottom: 0;">
-      <div class="aurora aurora--a" aria-hidden="true"></div>
-      <div class="shell" style="position: relative; z-index: 1;">
-        <div class="eyebrow reveal">
-          <span class="eyebrow__num">&rarr;</span><span>Attendee registration</span>
-          <span class="eyebrow__line" aria-hidden="true"></span>
-        </div>
-        <div class="row g-4 align-items-end">
-          <div class="col-lg-8">
-            <h1 class="u-h1 reveal" style="text-transform: uppercase; letter-spacing: -0.04em;">
-              Claim your<br><span class="u-signal">badge.</span>
-            </h1>
-          </div>
-          <div class="col-lg-4">
-            <p class="u-lead reveal" data-delay="1">
-              Two minutes. Five fields. Your attendee record is written to the
-              register as portable JSON the moment you submit.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================================================ FORM + RAIL -->
-    <section class="section reg" id="register">
-      <div class="shell">
-        <div class="row g-5">
-
-          <!-- ---------- Left rail: sticky editorial panel ---------- -->
-          <div class="col-lg-4">
-            <div class="reg__rail reveal">
-              <p class="u-mono u-faint mb-3">What every pass includes</p>
-              <ul class="ticks">
-                <li>All 86 sessions across six tracks</li>
-                <li>Workshop and studio-hour access</li>
-                <li>Breakfast, lunch and the Thursday reception</li>
-                <li>Printed badge and lanyard at the desk</li>
-                <li>Session recordings for 12 months</li>
-                <li>Quiet room, ASL interpretation, childcare</li>
-              </ul>
-
-              <div class="mt-5">
-                <p class="u-mono u-faint mb-3">Need help?</p>
-                <p class="u-muted" style="font-size: var(--t-small);">
-                  Email <a class="u-link" href="mailto:registration@converge26.example">registration@converge26.example</a>
-                  or call <a class="u-link" href="tel:+14155550100">+1 (415) 555-0100</a>,
-                  weekdays 09:00&ndash;18:00&nbsp;PT.
-                </p>
-              </div>
+        <form>
+            <div>
+                <label for="tbEmail">Email:</label>
+                <input type="text" id="tbEmail"/>
             </div>
-          </div>
-
-          <!-- ---------- Right: the form panel ---------- -->
-          <div class="col-lg-8">
-            <div class="panel reveal" data-delay="1">
-
-              <div class="panel__head">
-                <h2 class="u-h3 mb-2">Registration details</h2>
-                <p class="u-muted mb-0" style="font-size: var(--t-small);">
-                  Fields marked <span class="field__req" aria-hidden="true">*</span>
-                  <span class="u-faint">(required)</span> must be completed.
-                </p>
-              </div>
-
-              <!-- Completion meter -->
-              <div class="meter" aria-hidden="true">
-                <div class="meter__head">
-                  <span>Form completion</span>
-                  <span id="meterValue">0%</span>
-                </div>
-                <div class="meter__track">
-                  <div class="meter__fill" id="meterFill"></div>
-                </div>
-              </div>
-
-              <!-- Error summary (populated by JS on a failed submit) -->
-              <div class="alert-x" id="errorSummary" role="alert" tabindex="-1" hidden>
-                <div>
-                  <p class="alert-x__title">Please fix the following before submitting</p>
-                  <ul id="errorSummaryList"></ul>
-                </div>
-              </div>
-
-              <!-- Success banner -->
-              <div class="alert-x alert-x--ok" id="successBanner" role="status" hidden>
-                <div>
-                  <p class="alert-x__title" id="successTitle">Registration confirmed</p>
-                  <p class="mb-0 u-muted" style="font-size: var(--t-small);" id="successBody"></p>
-                </div>
-              </div>
-
-              <!--
-                novalidate: we suppress the browser's native bubbles so our own
-                styled, accessible messages are the single source of truth.
-              -->
-              <form id="registerForm" novalidate autocomplete="on">
-
-                <!-- ============ Attendee identity ============ -->
-                <fieldset class="fieldset">
-                  <legend class="fieldset__legend">01 &nbsp;Attendee</legend>
-
-                  <div class="row g-4">
-                    <!-- Full Name (required) -->
-                    <div class="col-md-6">
-                      <div class="field">
-                        <label class="field__label" for="tbName">
-                          Full name <span class="field__req" aria-hidden="true">*</span>
-                        </label>
-                        <input class="form-control input-x" type="text" id="tbName" name="fullName"
-                               placeholder="Ava Delgado" autocomplete="name"
-                               required minlength="2" maxlength="80"
-                               aria-describedby="errName helpName">
-                        <span class="field__help" id="helpName">As it should appear on your badge</span>
-                        <span class="invalid-feedback" id="errName"></span>
-                      </div>
-                    </div>
-
-                    <!-- Email (required) -->
-                    <div class="col-md-6">
-                      <div class="field">
-                        <label class="field__label" for="tbEmail">
-                          Email address <span class="field__req" aria-hidden="true">*</span>
-                        </label>
-                        <input class="form-control input-x" type="email" id="tbEmail" name="email"
-                               placeholder="you@organisation.com" autocomplete="email"
-                               required maxlength="120"
-                               aria-describedby="errEmail helpEmail">
-                        <span class="field__help" id="helpEmail">Your confirmation is sent here</span>
-                        <span class="invalid-feedback" id="errEmail"></span>
-                      </div>
-                    </div>
-
-                    <!-- Phone (OPTIONAL) -->
-                    <div class="col-md-6">
-                      <div class="field">
-                        <label class="field__label" for="tbPhone">
-                          Contact phone
-                          <span class="field__optional">Optional</span>
-                        </label>
-                        <div class="input-group-x">
-                          <span class="input-group-x__addon" aria-hidden="true">+1</span>
-                          <input class="form-control input-x" type="tel" id="tbPhone" name="phone"
-                                 placeholder="(415) 555-0142" autocomplete="tel"
-                                 inputmode="tel" maxlength="20"
-                                 aria-describedby="errPhone helpPhone">
-                        </div>
-                        <span class="field__help" id="helpPhone">10 digits, US format. Used only for day-of changes.</span>
-                        <span class="invalid-feedback" id="errPhone"></span>
-                      </div>
-                    </div>
-
-                    <!-- Age (required) -->
-                    <div class="col-md-6">
-                      <div class="field">
-                        <label class="field__label" for="tbAge">
-                          Age <span class="field__req" aria-hidden="true">*</span>
-                        </label>
-                        <input class="form-control input-x" type="text" id="tbAge" name="age"
-                               placeholder="34" inputmode="numeric" required
-                               aria-describedby="errAge helpAge">
-                        <span class="field__help" id="helpAge">Whole number, 16&ndash;120. Attendees must be 16 or over.</span>
-                        <span class="invalid-feedback" id="errAge"></span>
-                      </div>
-                    </div>
-                  </div>
-                </fieldset>
-
-                <!-- ============ Affiliation ============ -->
-                <fieldset class="fieldset">
-                  <legend class="fieldset__legend">02 &nbsp;Affiliation &amp; address</legend>
-
-                  <!-- tbCompany: added upstream by the team; kept with their id -->
-                  <div class="field">
-                    <label class="field__label" for="tbCompany">
-                      Company / organisation <span class="field__req" aria-hidden="true">*</span>
-                    </label>
-                    <input class="form-control input-x" type="text" id="tbCompany" name="company"
-                           placeholder="Northwind Events" autocomplete="organization"
-                           required minlength="2" maxlength="120"
-                           aria-describedby="errCompany helpCompany">
-                    <span class="field__help" id="helpCompany">The organisation printed on your badge</span>
-                    <span class="invalid-feedback" id="errCompany"></span>
-                  </div>
-
-                  <div class="field">
-                    <label class="field__label" for="tbAddress">
-                      Mailing address <span class="field__req" aria-hidden="true">*</span>
-                    </label>
-                    <textarea class="form-control input-x" id="tbAddress" name="affiliation"
-                              placeholder="1200 Market Street&#10;San Francisco, CA 94102"
-                              autocomplete="street-address" required minlength="5" maxlength="240"
-                              aria-describedby="errAddress helpAddress"></textarea>
-                    <span class="field__help" id="helpAddress">
-                      Where your receipt and any printed materials should be sent
-                    </span>
-                    <span class="invalid-feedback" id="errAddress"></span>
-                  </div>
-
-                  <div class="field">
-                    <label class="field__label" for="selTrack">
-                      Primary track interest
-                      <span class="field__optional">Optional</span>
-                    </label>
-                    <select class="form-select input-x" id="selTrack" name="track">
-                      <option value="">Select a track&hellip;</option>
-                      <option value="registration">Registration operations</option>
-                      <option value="data">Attendee data &amp; systems</option>
-                      <option value="badging">Badging &amp; access control</option>
-                      <option value="floor">Floor &amp; sponsor operations</option>
-                      <option value="hospitality">Hospitality &amp; accessibility</option>
-                      <option value="leadership">Event leadership</option>
-                    </select>
-                  </div>
-                </fieldset>
-
-                <!-- ============ Pass tier ============ -->
-                <fieldset class="fieldset">
-                  <legend class="fieldset__legend">03 &nbsp;Pass tier</legend>
-                  <div class="tiers">
-                    <div class="tier">
-                      <input type="radio" name="tier" id="tierFull" value="full" checked>
-                      <label class="tier__face" for="tierFull">
-                        <span class="tier__name">Full pass</span>
-                        <span class="tier__price">$899</span>
-                      </label>
-                    </div>
-                    <div class="tier">
-                      <input type="radio" name="tier" id="tierSingle" value="single">
-                      <label class="tier__face" for="tierSingle">
-                        <span class="tier__name">Single day</span>
-                        <span class="tier__price">$399</span>
-                      </label>
-                    </div>
-                    <div class="tier">
-                      <input type="radio" name="tier" id="tierStudent" value="student">
-                      <label class="tier__face" for="tierStudent">
-                        <span class="tier__name">Student</span>
-                        <span class="tier__price">$149</span>
-                      </label>
-                    </div>
-                  </div>
-                </fieldset>
-
-                <!-- ============ Consent ============ -->
-                <fieldset class="fieldset">
-                  <legend class="fieldset__legend">04 &nbsp;Confirm</legend>
-                  <div class="field">
-                    <label class="check-x" for="cbTerms">
-                      <input type="checkbox" id="cbTerms" name="terms" required
-                             aria-describedby="errTerms">
-                      <span class="check-x__text">
-                        I agree to the <a href="#register">code of conduct</a> and
-                        understand my details are stored as part of the attendee
-                        <span style="white-space: nowrap;">register.<span class="field__req" aria-hidden="true">&nbsp;*</span></span>
-                      </span>
-                    </label>
-                    <span class="invalid-feedback" id="errTerms"></span>
-                  </div>
-                  <div class="field mb-0">
-                    <label class="check-x" for="cbUpdates">
-                      <input type="checkbox" id="cbUpdates" name="updates">
-                      <span class="check-x__text">Email me agenda updates before the event</span>
-                    </label>
-                  </div>
-                </fieldset>
-
-                <!-- ============ Actions ============ -->
-                <div class="form-foot">
-                  <!--
-                    validateData() is kept as the global entry point for
-                    backwards compatibility with the original sketch.
-                  -->
-                  <button class="btn-x btn-x--primary" type="submit" id="btnSubmit" value="Go">
-                    <span id="btnSubmitLabel">Complete registration</span>
-                    <span class="btn-x__arrow" aria-hidden="true">&rarr;</span>
-                  </button>
-                  <button class="btn-x btn-x--ghost" type="reset" id="btnReset">Clear form</button>
-                  <span class="u-mono u-faint" id="editingNote" hidden>Editing existing record</span>
-                </div>
-
-              </form>
+            <div>
+                <label for="tbName">First and Last Name:</label>
+                <input type="text" id="tbName"/>
             </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <hr class="rule">
-
-    <!-- ============================================== ATTENDEE REGISTER -->
-    <section class="section" id="roster">
-      <div class="shell">
-        <div class="eyebrow reveal">
-          <span class="eyebrow__num">05</span><span>Attendee register</span>
-          <span class="eyebrow__line" aria-hidden="true"></span>
-        </div>
-
-        <div class="row g-4 align-items-end mb-5">
-          <div class="col-lg-7">
-            <h2 class="u-h2 reveal">Submitted attendees</h2>
-            <p class="u-lead mt-3 reveal" data-delay="1">
-              Every submission is rendered here immediately. Edit a row to load it
-              back into the form, or remove it from the register.
-            </p>
-          </div>
-          <div class="col-lg-5">
-            <div class="d-flex flex-wrap gap-3 justify-content-lg-end reveal" data-delay="2">
-              <span class="chip"><span id="rosterCount">0</span>&nbsp;registered</span>
-              <button class="btn-x btn-x--sm" type="button" id="btnSeed">Load sample data</button>
-              <button class="btn-x btn-x--sm btn-x--ghost" type="button" id="btnClearAll">Clear register</button>
+            <div>
+                <label for="tbAge">Age:</label>
+                <input type="text" id="tbAge"/>
             </div>
-          </div>
-        </div>
-
-        <!-- Empty state -->
-        <div class="empty reveal" id="rosterEmpty">
-          <span class="empty__icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-              <path d="M19 8v6M22 11h-6"/>
-            </svg>
-          </span>
-          <p class="empty__title">No attendees registered yet</p>
-          <p class="mb-0" style="font-size: var(--t-small);">
-            Complete the form above, or load the sample data to see the register populated.
-          </p>
-        </div>
-
-        <!-- Table (becomes stacked cards under 768px via CSS) -->
-        <div class="panel panel--flush" id="rosterWrap" hidden>
-          <div class="table-wrap">
-            <table class="table-x" id="rosterTable">
-              <caption class="visually-hidden-x">
-                Registered attendees, with options to edit or delete each record
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">Attendee</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Phone</th>
-                  <th scope="col">Age</th>
-                  <th scope="col">Company</th>
-                  <th scope="col">Address</th>
-                  <th scope="col">Tier</th>
-                  <th scope="col"><span class="visually-hidden-x">Actions</span></th>
-                </tr>
-              </thead>
-              <tbody id="rosterBody"><!-- rendered by js/signup.js --></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <hr class="rule">
-
-    <!-- ===================================================== JSON STORE -->
-    <section class="section" id="jsonstore">
-      <div class="shell">
-        <div class="eyebrow reveal">
-          <span class="eyebrow__num">06</span><span>JSON storage</span>
-          <span class="eyebrow__line" aria-hidden="true"></span>
-        </div>
-
-        <div class="row g-5">
-          <div class="col-lg-4">
-            <h2 class="u-h3 reveal">Stored as JSON</h2>
-            <p class="u-lead reveal" data-delay="1" style="font-size: var(--t-body);">
-              The register below is the live contents of
-              <code class="u-mono u-signal">attendees.json</code>. It updates on every
-              submit, edit and delete, and persists in your browser between visits.
-            </p>
-            <div class="d-grid gap-3 mt-4 reveal" data-delay="2">
-              <button class="btn-x btn-x--primary btn-x--sm" type="button" id="btnDownload">
-                Download attendees.json
-                <span class="btn-x__arrow" aria-hidden="true">&darr;</span>
-              </button>
-              <button class="btn-x btn-x--sm" type="button" id="btnCopy">Copy JSON to clipboard</button>
+            <div>
+                <label for="tbCompany">Company Name:</label>
+                <input type="text" id="tbCompany"/>
             </div>
-          </div>
+            <button id="btnSubmit" type="button" value="Create Account" onclick="validateData()">Create Account</button>
+        </form>
 
-          <div class="col-lg-8">
-            <div class="json reveal" data-delay="1">
-              <div class="json__bar">
-                <span class="json__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                <span class="json__file">data/attendees.json</span>
-                <span class="json__bar-actions">
-                  <button class="btn-icon" type="button" id="btnCopyInline"
-                          aria-label="Copy JSON to clipboard" title="Copy JSON">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="9" y="9" width="12" height="12" rx="2"/>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                  </button>
-                </span>
-              </div>
-              <pre class="json__code"><code id="jsonOut">[]</code></pre>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+        <script type="text/javascript">
+            function validateData() {
+            console.log("Validating")
+            let age = document.getElementById("tbAge");
+            let name = document.getElementById("tbName");
+            let email = document.getElementById("tbEmail");
+            let company = document.getElementById("tbCompany");
+            let ageVal = age.value;
+            let emailVal = email.value;
+            let nameVal = name.value;
+            let companyVal = company.value;
+            let rexAge = /\d{1,3}/;
+            let rexEmail = /@\w+\.com$/;
+            let rexName = /^[a-zA-Z]+\s[a-zA-Z]+$/;
+            let rexCompany = /\w+/;
+            let isDig = rexAge.test(ageVal);
+            let isEmail = rexEmail.test(emailVal);
+            let isName = rexName.test(nameVal);
+            let isCompany = rexCompany.test(companyVal);
+            if (!isDig){
+                alert("Not a number or null");
+                return console.log(false);
+            } 
 
-  </main>
+            if (!isEmail){
+                alert("Invalid email format");
+                return console.log(false);
+            } 
+            
+            if (!isName){
+                alert("Invalid name format");
+                return console.log(false);
+            } 
 
-  <!-- ========================================================== FOOTER -->
-  <footer class="foot">
-    <div class="shell">
-      <div class="row g-5">
-        <div class="col-lg-5">
-          <a class="brand mb-4" href="index.html">
-            <span class="brand__mark" aria-hidden="true"></span>
-            <span>
-              <span class="brand__word">Converge<span>&rsquo;26</span></span>
-              <span class="brand__sub">Attendee Ops</span>
-            </span>
-          </a>
-          <p class="u-muted" style="font-size: var(--t-small); max-width: 36ch;">
-            4&ndash;6 June 2026, Moscone West, San Francisco.
-            A fictional event built as an IST 256 team project.
-          </p>
-        </div>
-        <div class="col-6 col-lg-3">
-          <p class="foot__title">This page</p>
-          <ul class="foot__list">
-            <li><a href="#register">Registration form</a></li>
-            <li><a href="#roster">Attendee register</a></li>
-            <li><a href="#jsonstore">JSON storage</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-lg-4">
-          <p class="foot__title">Elsewhere</p>
-          <ul class="foot__list">
-            <li><a href="index.html">Homepage</a></li>
-            <li><a href="index.html#agenda">Agenda</a></li>
-            <li><a href="https://github.com/avasmolls/ConferenceEventOrganization">Repository</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="foot__bar">
-        <span>&copy; 2026 CONVERGE. IST 256 team project &mdash; Penn State. Fictional event.</span>
-        <span class="u-mono">Design system v1.0</span>
-      </div>
-    </div>
-  </footer>
+            if (!isCompany){
+                alert("Invalid company name");
+                return console.log(false);
+            } 
 
-  <!-- Toast region -->
-  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="true"></div>
+            return console.log(true);
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-  <script src="js/app.js"></script>
-  <script src="js/signup.js"></script>
-</body>
+            }
+        </script>
+    </body>
+
 </html>
