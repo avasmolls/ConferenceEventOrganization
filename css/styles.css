@@ -1,0 +1,81 @@
+/* ==========================================================================
+   Conference Event Organizing — shared stylesheet
+   --------------------------------------------------------------------------
+   These rules were written by the team in index.html and moved here so both
+   index.html and signup.html load the same styles from one file. Nothing was
+   rewritten in the move — only the indentation was normalised.
+
+   Loaded AFTER Bootstrap on both pages, so these rules win on ties.
+   ========================================================================== */
+
+ body {
+     font-family: 'Inter', sans-serif;
+     color: #000;
+ }
+ .site-title {
+     font-weight: 700;
+     font-size: clamp(2rem, 5vw, 3rem);
+     letter-spacing: -0.04cm;
+     text-transform: uppercase;
+     line-height: 1;
+ }
+
+ /* Navigation */
+ .navbar .nav-link {
+     color: #000;
+     font-size: 0.95rem
+ }
+
+ .navbar .nav-link.active {
+     font-weight: 700;
+ }
+
+ .navbar .nav-link:hover {
+     color: #ff4d00;
+ }
+
+/* Image placeholders */
+ .placeholder-img {
+     background-color: #d9d9d9;
+     width: 100%;
+  }
+  .placeholder-hero {
+     height: 400px;
+     margin-bottom: 2rem;
+  }
+  .placeholder-banner {
+     height: 350;
+     margin-top: 2rem;
+  }
+
+  /* Header */
+  .hero-header {
+     font-weight: 700;
+     font-size: clamp(2.5rem, 8vw, 5.5rem);
+     line-height: 1.2;
+     text-transform: uppercase;
+     margin: 0;
+  }
+
+  /* Subheader */
+  .hero-sub {
+     font-weight: 700;
+     font-size: clamp(1rem, 2vw, 1.4rem);
+     text-transform: uppercase;
+     margin: 0
+  }  
+
+  /* Button for call to action */
+  .btn-cta {
+     background-color: #ff4d00;
+     color: #fff;
+     border: none;
+     font-weight: 700;
+     text-transform: uppercase;
+     margin-top: 2rem;
+  }
+
+  .btn-cta:hover {
+     background-color: #000;
+     color: #fff
+  }
