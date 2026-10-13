@@ -79,3 +79,19 @@
      background-color: #000;
      color: #fff
   }
+
+  /* Submit button on the sign-up page — same colours as .btn-cta on index.
+     Bootstrap 5.3 drives button colours through CSS variables, and its own
+     .btn:hover rule is more specific than a plain .btn-primary override, so
+     setting the variables is what makes hover and active follow too. */
+  .btn-primary {
+     --bs-btn-color: #fff;
+     --bs-btn-bg: #ff4d00;
+     --bs-btn-border-color: #ff4d00;
+     --bs-btn-hover-color: #fff;
+     --bs-btn-hover-bg: #000;
+     --bs-btn-hover-border-color: #000;
+     --bs-btn-active-color: #fff;
+     --bs-btn-active-bg: #000;
+     --bs-btn-active-border-color: #000;
+  }
