@@ -40,25 +40,35 @@
                 </ul>
             </div>
         </nav>
-        <form>
-            <div>
-                <label for="tbEmail">Email:</label>
-                <input type="text" id="tbEmail"/>
+        
+        <!-- Sign Up Form -->
+         <div class="container">
+            <div class="row justify-content-center">
+                <div class="card shadow-sm p-4">
+                    <h2 class="text-center mb-4">Attendee Sign Up</h2>
+                        <form>
+                            <div>
+                                <label for="tbEmail">Email:</label>
+                                <input type="text" id="tbEmail"/>
+                            </div>
+                            <div>
+                                <label for="tbName">First and Last Name:</label>
+                                <input type="text" id="tbName"/>
+                            </div>
+                            <div>
+                                <label for="tbAge">Age:</label>
+                                <input type="text" id="tbAge"/>
+                            </div>
+                            <div>
+                                <label for="tbCompany">Company Name:</label>
+                                <input type="text" id="tbCompany"/>
+                            </div>
+                            <button id="btnSubmit" type="button" value="Create Account" onclick="validateData()">Create Account</button>
+                            </div>
+                            </form>
+                </div>
             </div>
-            <div>
-                <label for="tbName">First and Last Name:</label>
-                <input type="text" id="tbName"/>
-            </div>
-            <div>
-                <label for="tbAge">Age:</label>
-                <input type="text" id="tbAge"/>
-            </div>
-            <div>
-                <label for="tbCompany">Company Name:</label>
-                <input type="text" id="tbCompany"/>
-            </div>
-            <button id="btnSubmit" type="button" value="Create Account" onclick="validateData()">Create Account</button>
-        </form>
+         </div>
         
         <!-- Attendee Search -->
         <div class="container mt-5">
