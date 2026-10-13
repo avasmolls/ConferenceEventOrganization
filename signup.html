@@ -141,7 +141,7 @@
             let nameVal = name.value;
             let companyVal = company.value;
             let rexAge = /\d{1,3}/;
-            let rexEmail = /@\w+\.com$/;
+            let rexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}$/;
             let rexName = /^[a-zA-Z]+\s[a-zA-Z]+$/;
             let rexCompany = /\w+/;
             let isDig = rexAge.test(ageVal);
