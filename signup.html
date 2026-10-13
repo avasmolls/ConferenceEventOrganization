@@ -59,8 +59,55 @@
             </div>
             <button id="btnSubmit" type="button" value="Create Account" onclick="validateData()">Create Account</button>
         </form>
+        
+        <!-- Attendee Search -->
+        <div class="container mt-5">
+            <h2>Registered Attendees</h2>
+
+            <input type="search" id="attendeeSearch"
+                class="form-control mb-3"
+                placeholder="Search by name, email, or company">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Age</th>
+                        <th>Company</th>
+                    </tr>
+                </thead>
+                <tbody id="attendeeList"></tbody>
+            </table>
+        </div>
+
 
         <script type="text/javascript">
+            
+            let attendees = JSON.parse(localStorage.getItem("attendees") || "[]");
+
+            function searchAttendees() {
+                let search = document.getElementById("attendeeSearch").value.toLowerCase();
+                let table = document.getElementById("attendeeList");
+
+                table.innerHTML = "";
+
+                attendees.forEach(function(attendee) {
+                    let text = (attendee.name + attendee.email + attendee.company).toLowerCase();
+
+                    if (text.includes(search)) {
+                        let row = table.insertRow();
+                        row.insertCell().textContent = attendee.name;
+                        row.insertCell().textContent = attendee.email;
+                        row.insertCell().textContent = attendee.age;
+                        row.insertCell().textContent = attendee.company;
+                    }
+                });
+            }
+
+            document.getElementById("attendeeSearch").addEventListener("input", searchAttendees);
+            searchAttendees();
+
             function validateData() {
             console.log("Validating")
             let age = document.getElementById("tbAge");
@@ -98,6 +145,18 @@
                 alert("Invalid company name");
                 return console.log(false);
             } 
+            
+            let attendee = {
+                name: nameVal,
+                email: emailVal,
+                age: ageVal,
+                company: companyVal
+            };
+
+            attendees.push(attendee);
+            localStorage.setItem("attendees", JSON.stringify(attendees));
+
+            searchAttendees();
 
             return console.log(true);
 
