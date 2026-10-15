@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Conference Sessions</title>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="signup.html">Signup</a>
+  <a href="sessions.html">Sessions</a>
+</nav>
+
+<h1>Conference Sessions</h1>
+<p>Add and manage conference sessions.</p>
+
+<h2>Add Session</h2>
+
+<form id="sessionForm">
+
+  <label>Session ID:</label>
+  <input type="text" id="sessionId" required>
+  <br><br>
+
+  <label>Session Title:</label>
+  <input type="text" id="sessionTitle" required>
+  <br><br>
+
+  <label>Category:</label>
+  <input type="text" id="category" required>
+  <br><br>
+
+  <label>Format:</label>
+  <input type="text" id="format" required>
+  <br><br>
+
+  <label>Ticket Price:</label>
+  <input type="number" id="price" required>
+  <br><br>
+
+  <label>Speaker:</label>
+  <input type="text" id="speaker">
+  <br><br>
+
+  <button type="submit">Add Session</button>
+  <button type="button" id="updateBtn">Update Session</button>
+
+</form>
+
+<h2>Existing Sessions</h2>
+
+<input type="text" id="search" placeholder="Search sessions">
+
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Category</th>
+    <th>Format</th>
+    <th>Price</th>
+    <th>Speaker</th>
+  </tr>
+  </thead>
+  <tbody id="sessionTable"></tbody>
+</table>
+
+</body>
+</html>
