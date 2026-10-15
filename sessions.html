@@ -19,7 +19,7 @@
                     <a class="nav-link" href="signup.html">Sign Up</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="product-details.html">Product Details</a>
+                    <a class="nav-link" href="sessions.html">Product Details</a>
                 </ul>
             </div>
         </nav>
@@ -49,7 +49,7 @@
   <br><br>
 
   <label>Ticket Price:</label>
-  <input type="number" id="price" required>
+  <input type="text" id="price" required>
   <br><br>
 
   <label>Speaker:</label>
@@ -85,6 +85,31 @@
                 // Item Category or Type (required) Dropdown
                 // Unit of Measure or Format (required) Capacity
                 // Item Price or Value (required) Ticket Price
+                // Date
+              let id = document.getElementById("sessionId").value;
+              let title = document.getElementById("sessionTitle").value;
+              let price = document.getElementById("price").value;
+              let idVal = id.value;
+              let titleVal = title.value;
+              let priceVal = price.value;
+              let rexDig = /^[0-9]+$/;
+              let rexTitle = /^[a-zA-Z0-9\s]+$/;
+              let rexPrice = /^[0-9]+(\.[0-9]{1,2})?$/;
+              let isID = rexDig.test(idVal);
+              let isTitle = rexTitle.test(titleVal);
+              let isPrice = rexPrice.test(priceVal);
+              
+              if (!isID) {
+                alert("Session ID must be a number.");
+              }
+
+              if (!isTitle) {
+                alert("Session Title must be alphanumeric.");
+              }
+
+              if (!isPrice) {
+                alert("Ticket Price must be a valid number.");
+              }
             }
         </script>
     </body>
