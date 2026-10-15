@@ -6,12 +6,24 @@
   <title>Conference Sessions</title>
 </head>
 <body>
+  <!-- Navigation -->
+        <nav class="navbar navbar-expand py-3">
+            <div class="container">
+                <a class="navbar-brand site-title" href="index.html">Attendee Management</a>
 
-<nav>
-  <a href="index.html">Home</a>
-  <a href="signup.html">Signup</a>
-  <a href="sessions.html">Sessions</a>
-</nav>
+                <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="signup.html">Sign Up</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="product-details.html">Product Details</a>
+                </ul>
+            </div>
+        </nav>
+
 
 <h1>Conference Sessions</h1>
 <p>Add and manage conference sessions.</p>
@@ -66,6 +78,15 @@
   </thead>
   <tbody id="sessionTable"></tbody>
 </table>
-
+        <script type="text/javascript">
+            function validateForm() {
+                //Item ID or Identifier (required) ID number
+                // Item Description or Title (required) Title + Description 255 Char
+                // Item Category or Type (required) Dropdown
+                // Unit of Measure or Format (required) Capacity
+                // Item Price or Value (required) Ticket Price
+            }
+        </script>
+    </body>
 </body>
 </html>
