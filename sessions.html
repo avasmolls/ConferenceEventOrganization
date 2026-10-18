@@ -59,14 +59,16 @@ Item Weight or Additional Info (optional)
   <h2>Add Session</h2>
 
   <form id="sessionForm">
+    
+    <div class="mb-3">
+      <label>Session ID:</label>
+      <input type="text" id="sessionId" required>
+    </div>
 
-    <label>Session ID:</label>
-    <input type="text" id="sessionId" required>
-    <br><br>
-
-    <label>Session Title:</label>
-    <input type="text" id="sessionTitle" required>
-    <br><br>
+    <div class="mb-3">
+      <label>Session Title:</label>
+      <input type="text" id="sessionTitle" required>
+    </div>
 
     <div class="mb-3">
       <label for="category" class="form-label">Category:</label>
@@ -81,17 +83,20 @@ Item Weight or Additional Info (optional)
       <div class="invalid-feedback">Please select a category</div>
     </div>
 
-    <label>Format:</label>
-    <input type="text" id="format" required>
-    <br><br>
+    <div class="mb-3">
+      <label>Format:</label>
+      <input type="text" id="format" required>
+    </div>
 
-  <label>Ticket Price:</label>
-  <input type="text" id="price" required>
-  <br><br>
+  <div class="mb-3">
+    <label>Ticket Price:</label>
+    <input type="text" id="price" required>
+  </div>
 
-    <label>Speaker:</label>
-    <input type="text" id="speaker">
-    <br><br>
+    <div class="mb-3">
+      <label>Speaker:</label>
+      <input type="text" id="speaker">
+    </div>
 
     <button type="submit">Add Session</button>
     <button type="button" id="updateBtn">Update Session</button>
