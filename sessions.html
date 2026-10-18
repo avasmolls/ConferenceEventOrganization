@@ -119,23 +119,34 @@ Item Weight or Additional Info (optional)
     <button type="button" id="updateBtn">Update Session</button>
 
   </form>
-  <h2>Existing Sessions</h2>
+<!-- Displaying Existing Sessions -->
+ <div class="col-lg-7">
+  <div class="card shadow-sm border-0 rounded-4 p-4 bg-white">
+    <h2 class="h4 fw-bold mb-3 text-dark">Existing Sessions</h2>
 
-  <input type="text" id="search" placeholder="Search sessions">
+    <div class="mb-3">
+      <input type="text" id=""search" class="form-control" placeholder="Search sessions">
+    </div>
 
-<table border="1">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Title</th>
-    <th>Category</th>
-    <th>Format</th>
-    <th>Price</th>
-    <th>Speaker</th>
-  </tr>
-  </thead>
-  <tbody id="sessionTable"></tbody>
-</table>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Format</th>
+            <th>Price</th>
+            <th>Speaker</th>
+          </tr>
+        </thead>
+        <tbody id="sessionTable">
+        </tbody>
+        </table>
+    </div>
+  </div>
+ </div>
+</main>
         <script type="text/javascript">
             function validateForm() {
                 //Item ID or Identifier (required) ID number
