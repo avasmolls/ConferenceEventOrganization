@@ -56,69 +56,69 @@ Item Weight or Additional Info (optional)
   <h1>Conference Sessions</h1>
   <p>Add and manage conference sessions.</p>
 
-   <!-- Adding New Sessions -->
-  <h2>Add Session</h2>
-
-  <!-- Form's Cosmetic Appearance-->
-  <div class=""card shadow-sm border-0 rounded-4 p-4 bg-white">
-    <div class="d-flex align-items-center mb-4">
-      <div class="bg-primary text-white rounded-3 p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+    <!-- Adding New Sessions -->
+  <main class="container my-5">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="fw-bold text-uppercase">Conference Sessions</h1>
       </div>
     </div>
-  </div>
 
-  <!-- Form for Adding New Sessions -->
-  <form id="sessionForm">
+    <div class="row g-4">
+      <!-- Add/Update Form -->
+      <div class="col-lg-5">
+        <div class=""card shadow-sm border-0 rounded-4 p-4 bg-white>
+          <h2 class="h4 fw-bold mb-4">Add Session</h2>
+        </div>
+      </div>
+      <form id="sessionForm" onsubmit="return validateForm()">
+        <form id="sessionForm" onsubmit="return validateForm()">
+            <div class="mb-3">
+              <label for="sessionId" class="form-label fw-semibold">Session ID:</label>
+              <input type="text" class="form-control" id="sessionId" required>
+            </div>
 
-    <!-- Session ID -->
-    <div class="mb-3">
-      <label>Session ID:</label>
-      <input type="text" id="sessionId" required>
-    </div>
-    
-    <!-- Session Title -->
-    <div class="mb-3">
-      <label>Session Title:</label>
-      <input type="text" id="sessionTitle" required>
-    </div>
-    
-    <!-- Session Category -->
-    <div class="mb-3">
-      <label for="category" class="form-label">Category:</label>
-      <select class="form-select" id="category" required>
-        <option value="" selected disabled>Choose a category</option>
-        <option value="Keynote Speech">Keynote Speech</option>
-        <option value="Workshop">Workshop</option>
-        <option value="Panel">Panel</option>
-        <option value="Networking Event">Networking Event</option>
-      </select>
-      // Ensuring the category selection is valid and providing feedback if not selected
-      <div class="invalid-feedback">Please select a category</div>
-    </div>
+            <div class="mb-3">
+              <label for="sessionTitle" class="form-label fw-semibold">Session Title:</label>
+              <input type="text" class="form-control" id="sessionTitle" required>
+            </div>
 
-  <!-- Session Format -->
-  <div class="mb-3">
-    <label>Format:</label>
-    <input type="text" id="format" required>
-  </div>
-    
-  <!-- Ticket Price -->
-  <div class="mb-3">
-    <label>Ticket Price:</label>
-    <input type="text" id="price" required>
-  </div>
+            <div class="mb-3">
+              <label for="category" class="form-label fw-semibold">Category:</label>
+              <select class="form-select" id="category" required>
+                <option value="" selected disabled>Choose a category</option>
+                <option value="Technology">Technology</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Keynote">Keynote</option>
+              </select>
+            </div>
 
-  <!-- Speaker Name -->
-  <div class="mb-3">
-    <label>Speaker:</label>
-    <input type="text" id="speaker">
-  </div>
+            <div class="mb-3">
+              <label for="format" class="form-label fw-semibold">Format:</label>
+              <input type="text" class="form-control" id="format" required>
+            </div>
 
-    <!-- Submit Buttons -->  
-    <button type="submit">Add Session</button>
-    <button type="button" id="updateBtn">Update Session</button>
+            <div class="mb-3">
+              <label for="price" class="form-label fw-semibold">Ticket Price:</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control" id="price" required>
+              </div>
+            </div>
 
-  </form>
+            <div class="mb-3">
+              <label for="speaker" class="form-label fw-semibold">Speaker:</label>
+              <input type="text" class="form-control" id="speaker">
+            </div>
+
+            <!-- Buttons use .btn-primary which is styled orange in styles.css -->
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary fw-semibold py-2">Add Session</button>
+              <button type="button" id="updateBtn" class="btn btn-outline-secondary fw-semibold py-2">Update Session</button>
+            </div>
+          </form>
+        </div>
+      </div>
 <!-- Displaying Existing Sessions -->
  <div class="col-lg-7">
   <div class="card shadow-sm border-0 rounded-4 p-4 bg-white">
