@@ -1,0 +1,51 @@
+
+[
+  {
+    "id": 1,
+    "title": "Sample Workshop",
+    "category": "Workshop",
+    "format": "Hands On",
+    "price": 67.99,
+    "speaker": "John Doe"
+  },
+  {
+    "id": 2,
+    "title": "Future of Cybersecurity",
+    "category": "Technology",
+    "format": "In Person",
+    "price": 49.99,
+    "speaker": "Jordan Lee"
+  },
+  {
+    "id": 3,
+    "title": "Building Better Websites",
+    "category": "Workshop",
+    "format": "Hands On",
+    "price": 39.99,
+    "speaker": "Jake Smith"
+  },
+  {
+    "id": 4,
+    "title": "Innovation in Technology",
+    "category": "Keynote",
+    "format": "In Person",
+    "price": 79.99,
+    "speaker": "Alex Carter"
+  },
+  {
+    "id": 5,
+    "title": "Artificial Intelligence Trends",
+    "category": "Technology",
+    "format": "Virtual",
+    "price": 29.99,
+    "speaker": "Casey Brooks"
+  },
+  {
+    "id": 6,
+    "title": "Career Development Strategies",
+    "category": "Workshop",
+    "format": "Panel Discussion",
+    "price": 19.99,
+    "speaker": "Taylor Morgan"
+  }
+]
