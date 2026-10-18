@@ -97,31 +97,21 @@
   }
 
   /* Session tickets (sessions.html) --------------------------------------
-     .ticket-card and .ticket-stub are hooks in the session card template,
-     and #sessionTable is the container the cards are appended into.
-
-     The notch effect needs two things: a backdrop colour that differs from
-     the card, and circles painted in that same backdrop colour sitting on
-     the tear line - half outside the card, half in. The visible half reads
-     as a hole punched in the edge.
+     .ticket-card and .ticket-stub are hooks in the session card template.
 
      Bootstrap's .bg-primary, .border-0 and .overflow-hidden all use
-     !important, so these overrides need it to win. overflow must become
-     visible or the notches get clipped and only half the circle shows. */
-  #sessionTable {
-     background-color: #eceef2;
-     padding: 1.5rem 1rem 0.5rem;
-  }
-
+     !important, so the overrides below need it to win. The notch circles
+     are deliberately left to be clipped by that overflow:hidden - the
+     clipping is what leaves a half-circle bitten out of the stub edge. */
   .ticket-card {
      border-radius: 0;
-     overflow: visible !important;
+     border: 1px solid #e3e3e3 !important;
   }
 
   .ticket-stub {
      background-color: #ff4d00 !important;
      position: relative;
-     border-right: 2px dashed #eceef2;
+     border-right: 2px dashed rgba(255, 255, 255, 0.65);
   }
 
   /* Perforation notches at each end of the tear line */
@@ -129,13 +119,13 @@
   .ticket-stub::after {
      content: "";
      position: absolute;
-     right: -11px;
-     width: 22px;
-     height: 22px;
+     right: -10px;
+     width: 20px;
+     height: 20px;
      border-radius: 50%;
-     background-color: #eceef2;
+     background-color: #fff;
      z-index: 2;
   }
 
-  .ticket-stub::before { top: -11px; }
-  .ticket-stub::after  { bottom: -11px; }
+  .ticket-stub::before { top: -10px; }
+  .ticket-stub::after  { bottom: -10px; }
