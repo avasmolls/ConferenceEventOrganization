@@ -145,7 +145,7 @@ Item Weight or Additional Info (optional)
       let price = $("#price").val().trim();
       let format = $("#format").val().trim();
       let speaker = $("#speaker").val().trim();
-      let category = ($("#category").val() || "" ).trim();
+      let category = ($("#category").val() || "").trim();
 
       let rexDig = /^[0-9]+$/;
       let rexAlphaNum = /^[a-zA-Z0-9\s]+$/;
@@ -158,6 +158,7 @@ Item Weight or Additional Info (optional)
       if (!rexPrice.test(price)) errors.push("Ticket Price must be a valid number.");
       if (!rexAlphaNum.test(format)) errors.push("Format must be alphanumeric.");
       if (speaker && !rexName.test(speaker)) errors.push("Speaker name must be a valid name.");
+      if (!category) errors.push("Please choose a category.");
 
       return errors;
     }
@@ -252,9 +253,9 @@ Item Weight or Additional Info (optional)
         });
       // Search/Filter
       $("#search").on("input", function () {
-        const term = $(this).val().toLowerCase();
+        const term = $(this).val().toLowerCase().trim();
         const filtered = sessions.filter(s =>
-          Object.value(s).some(v => String(v).toLowerCase().includes(term))
+          Object.values(s).some(v => String(v).toLowerCase().includes(term))
         );
         renderSessions(filtered);
       });
