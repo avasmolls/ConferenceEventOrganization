@@ -71,7 +71,6 @@ Item Weight or Additional Info (optional)
           <h2 class="h4 fw-bold mb-4">Add Session</h2>
         </div>
       </div>
-      <form id="sessionForm" onsubmit="return validateForm()">
         <form id="sessionForm" onsubmit="return validateForm()">
             <div class="mb-3">
               <label for="sessionId" class="form-label fw-semibold">Session ID:</label>
@@ -125,7 +124,7 @@ Item Weight or Additional Info (optional)
     <h2 class="h4 fw-bold mb-3 text-dark">Existing Sessions</h2>
 
     <div class="mb-3">
-      <input type="text" id=""search" class="form-control" placeholder="Search sessions">
+      <input type="text" id="search" class="form-control" placeholder="Search sessions">
     </div>
 
     <div class="table-responsive">
@@ -147,91 +146,93 @@ Item Weight or Additional Info (optional)
   </div>
  </div>
 </main>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script type="text/javascript">
-            function validateForm() {
-                //Item ID or Identifier (required) ID number
-                // Item Description or Title (required) Title + Description 255 Char
-                // Item Category or Type (required) Dropdown
-                // Unit of Measure or Format (required) Capacity
-                // Item Price or Value (required) Ticket Price
-                // Date
-              let id = document.getElementById("sessionId").value;
-              let title = document.getElementById("sessionTitle").value;
-              let price = document.getElementById("price").value;
-              let idVal = id.value;
-              let titleVal = title.value;
-              let priceVal = price.value;
-              let rexDig = /^[0-9]+$/;
-              let rexTitle = /^[a-zA-Z0-9\s]+$/;
-              let rexPrice = /^[0-9]+(\.[0-9]{1,2})?$/;
-              let isID = rexDig.test(idVal);
-              let isTitle = rexTitle.test(titleVal);
-              let isPrice = rexPrice.test(priceVal);
-              
-              if (!isID) {
-                alert("Session ID must be a number.");
-              }
+          let sessions = [
+              { id:123, title: "Example: A Sample Workshop", category: "Workshop", format:"Hands-On", price: "67.99", speaker: "John Doe"}
+            ]
 
-              if (!isTitle) {
-                alert("Session Title must be alphanumeric.");
-              }
+          function validateForm() {
+              //Item ID or Identifier (required) ID number
+              // Item Description or Title (required) Title
+              // Item Category or Type (required) Dropdown
+              // Unit of Measure or Format (required) Format
+              // Item Price or Value (required) Ticket Price
+              // Speaker
+            let id = $("#sessionId").val();
+            let title = $("#sessionTitle").val();
+            let price = $("#price").val();
+            let format = $("#format").val();
+            let speaker = $("#speaker").val();
+            let category = $("#category").val();
 
-              if (!isPrice) {
-                alert("Ticket Price must be a valid number.");
-              }
+            let rexDig = /^[0-9]+$/;
+            let rexAlphaNum = /^[a-zA-Z0-9\s]+$/;
+            let rexPrice = /^[0-9]+(\.[0-9]{1,2})?$/;
+            let rexName = /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/;
 
-              let sessions = [
-                { id:123, title: "Example: A Sample Workshop", category: "Workshop", format:"Hands-On", price: "67.99", speaker: "John Doe".}
-              ]
+            let errors = [];
+            if (!rexDig.test(id)) errors.push("Session ID must be a number.");
+            if (!rexAlphaNum.test(title)) errors.push("Session Title must be alphanumeric.");
+            if (!rexPrice.test(price)) errors.push("Ticket Price must be a valid number.");
+            if (!rexAlphaNum.test(format)) errors.push("Format must be alphanumeric.");
+            if (speaker && !rexName.test(speaker)) errors.push("Speaker name must be a valid name.");
 
-              function renderSessions(dataArray) {
-                let container = $("#SessionTicketContainer");
-                container.empty();
+            if (errors.length > 0) {
+              alert(errors.join("\n"));
+              return false; // Prevent form submission
+            }
+            sessions.push({ id: Number(id), title, category, format, price, speaker });
+            renderSessions(sessions);
+            $("#sessionForm")[0].reset();
+            return false;
+          }
 
-                if (dataArray.length === 0) {
-                  container.html('<div class="col-12 text-center text-muted py-4">No session found</div>');
-                  return;
-                }
+          function renderSessions(dataArray) {
+            let container = $("#SessionTicketContainer");
+            container.empty();
 
-                dataArray.foreEach(session => {
-                  let ticketCard = `
-                  <div class="col-md-6 mb-4">
-                    <div class="card bord-0 shadow-sm overflow-hidden h-100 ticket-card">
-                      <div class="row g-0 h-100">
-                        <!-- Left Ticket Stub (Price & Category) -->
-                        <div class="col-4 bg-primary text-white d-flex flex-column justify-content-center align-items-center p-3 text-center ticket-stub">
-                          <span class="badge bg-light text-dark mb-2 text-truncate w-100">${session.category}</span>
-                          <h3 class="fw-bold mb-0 text-white">$${session.price}</h3>
-                          <small class="text-white-50 text-uppercase">${session.format}</small>
+            if (dataArray.length === 0) {
+              container.html('<div class="col-12 text-center text-muted py-4">No session found</div>');
+              return;
+            }
+
+            dataArray.forEach(session => {
+              let ticketCard = `
+              <div class="col-md-6 mb-4">
+                <div class="card bord-0 shadow-sm overflow-hidden h-100 ticket-card">
+                  <div class="row g-0 h-100">
+                    <!-- Left Ticket Stub (Price & Category) -->
+                    <div class="col-4 bg-primary text-white d-flex flex-column justify-content-center align-items-center p-3 text-center ticket-stub">
+                      <span class="badge bg-light text-dark mb-2 text-truncate w-100">${session.category}</span>
+                      <h3 class="fw-bold mb-0 text-white">$${session.price}</h3>
+                      <small class="text-white-50 text-uppercase">${session.format}</small>
+                    </div>
+                    <!-- Right Ticket Details (Title, ID, Speaker) -->
+                    <div class="col-8 bg-white p-3 d-flex flex-column justify-content-between">
+                      <div>
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                          <h5 class="card-title fw-bold text-dark fs-6 text-truncate">${session.title}</h5>
                         </div>
-                        <!-- Right Ticket Details (Title, ID, Speaker) -->
-                        <div class="col-8 bg-white p-3 d-flex flex-column justify-content-between">
-                          <div>
-                            <div class="d-flex justify-content-between align-items-start mb-1">
-                              <h5 class="card-title fw-bold text-dark fs-6 text-truncate">${session.title}</h5>
-                            </div>
-                            <p class="text-muted small mb-1"><strong>Speaker:</strong> ${session.speaker || 'TBD'}</p>
-                            <span class="badge bg-secondary bg-opacity-15 text-secondary border">ID: #${session.id}</span>
-                          </div>
-                          
-                          <div class="d-flex justify-content-end gap-2 mt-3">
-                            <button class="btn btn-sm btn-outline-primary edit-session-btn" data-id="${session.id}">Edit</button>
-                          </div>
-                        </div>
+                        <p class="text-muted small mb-1"><strong>Speaker:</strong> ${session.speaker || 'TBD'}</p>
+                        <span class="badge bg-secondary bg-opacity-15 text-secondary border">ID: #${session.id}</span>
+                      </div>
+                      
+                      <div class="d-flex justify-content-end gap-2 mt-3">
+                        <button class="btn btn-sm btn-outline-primary edit-session-btn" data-id="${session.id}">Edit</button>
                       </div>
                     </div>
                   </div>
-                `;
-                container.append(ticketCard);
-                });
-              }
-              $(document).ready(function() {
-                renderSessions(sessions);
-              });
-            }
+                </div>
+              </div>
+            `;
+            container.append(ticketCard);
+          });
+          }
+          $(document).ready(function() {
+            renderSessions(sessions);
+          });
         </script>
-    </body>
-</body>
 </body>
 
 </html>
