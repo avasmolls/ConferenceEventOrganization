@@ -68,9 +68,18 @@ Item Weight or Additional Info (optional)
     <input type="text" id="sessionTitle" required>
     <br><br>
 
-    <label>Category:</label>
-    <input type="text" id="category" required>
-    <br><br>
+    <div class="mb-3">
+      <label for="category" class="form-label">Category:</label>
+      <select class="form-select" id="category" required>
+        <option value="" selected disabled>Choose a category</option>
+        <option value="Keynote Speech">Keynote Speech</option>
+        <option value="Workshop">Workshop</option>
+        <option value="Panel">Panel</option>
+        <option value="Networking Event">Networking Event</option>
+      </select>
+      // Ensuring the category selection is valid and providing feedback if not selected
+      <div class="invalid-feedback">Please select a category</div>
+    </div>
 
     <label>Format:</label>
     <input type="text" id="format" required>
