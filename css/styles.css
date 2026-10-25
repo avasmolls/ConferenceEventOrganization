@@ -129,3 +129,108 @@
 
   .ticket-stub::before { top: -10px; }
   .ticket-stub::after  { bottom: -10px; }
+
+  /* Cart tickets (cart.html) ---------------------------------------------
+     Same ticket look as the session cards, written for the cart page's
+     existing markup: inside #productList each session is a <p> followed by
+     its .addToCart button. The grid puts each pair on one row, so the <p>
+     becomes the ticket body and the button becomes the orange tear-off stub.
+     No classes were added to cart.html - these selectors use what is there. */
+  #productList {
+     display: grid;
+     grid-template-columns: minmax(0, 1fr) auto;
+     row-gap: 1rem;
+     margin: 1rem 0 1.5rem;
+  }
+
+  #productList p {
+     margin: 0;
+     padding: 1rem 1.25rem;
+     background-color: #fff;
+     border: 1px solid #e3e3e3;
+     border-right: 0;
+     font-weight: 700;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+  }
+
+  /* "Admit one" label above each title. No ticket number: the search
+     script hides tickets, and a CSS counter would renumber what is left. */
+  #productList p::before {
+     content: "Admit one";
+     color: #ff4d00;
+     font-size: 0.7rem;
+     letter-spacing: 0.08em;
+     text-transform: uppercase;
+     margin-bottom: 0.25rem;
+  }
+
+  /* The stub. overflow:hidden clips the notch circles into half-circles
+     bitten out of the tear line, the same trick as .ticket-stub. */
+  #productList .addToCart {
+     position: relative;
+     overflow: hidden;
+     min-width: 9rem;
+     padding: 0 1.25rem;
+     background-color: #ff4d00;
+     color: #fff;
+     border: 0;
+     border-left: 2px dashed rgba(255, 255, 255, 0.65);
+     font-weight: 700;
+     font-size: 0.85rem;
+     text-transform: uppercase;
+     cursor: pointer;
+  }
+
+  #productList .addToCart:hover {
+     background-color: #000;
+  }
+
+  #productList .addToCart:focus-visible {
+     outline: 2px solid #000;
+     outline-offset: 2px;
+  }
+
+  /* Perforation notches at each end of the tear line */
+  #productList .addToCart::before,
+  #productList .addToCart::after {
+     content: "";
+     position: absolute;
+     left: -10px;
+     width: 20px;
+     height: 20px;
+     border-radius: 50%;
+     background-color: #fff;
+  }
+
+  #productList .addToCart::before { top: -10px; }
+  #productList .addToCart::after  { bottom: -10px; }
+
+  @media (max-width: 575.98px) {
+     #productList .addToCart {
+        min-width: 6.5rem;
+        padding: 0 0.75rem;
+     }
+  }
+
+  /* Once a session is in the cart, the cart script disables its button and
+     relabels it "Added" - grey the stub so it reads as already taken. */
+  #productList .addToCart:disabled {
+     background-color: #8a8a8a;
+     cursor: default;
+  }
+
+  /* The search script adds a #noResults <p> when nothing matches. It is a
+     message, not a ticket, so undo the ticket styling and span the row. */
+  #productList #noResults {
+     grid-column: 1 / -1;
+     padding: 0;
+     border: 0;
+     background: none;
+     font-weight: 400;
+  }
+
+  #productList #noResults::before {
+     content: none;
+  }
