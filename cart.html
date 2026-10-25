@@ -112,6 +112,10 @@
     </form>
 
     <p id="formMessage"></p>
+    
+    <button type="button" id="sendProducts">Send Products to API</button>
+    <p id="apiMessage"></p>
+
 
 </div>
 
@@ -229,6 +233,36 @@
     document.getElementById("updateProduct").addEventListener("click", function () {
         validateProductForm();
     });
+</script>
+
+<script>
+$(document).ready(function() {
+    let products = [];
+
+    // Load products from JSON
+    $.getJSON("sessions.json", function(data) {
+        products = data;
+        console.log(products);
+    });
+
+    // Send JSON data to API
+    $("#sendProducts").click(function() {
+        $.ajax({
+            url: "/api/products",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(products),
+
+            success: function(data) {
+                $("#apiMessage").text("Products sent successfully!");
+            },
+
+            error: function() {
+                $("#apiMessage").text("API not available yet.");
+            }
+        });
+    });
+});
 </script>
 
 </body>
