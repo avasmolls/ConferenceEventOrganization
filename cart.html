@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Shopping Cart</title>
@@ -10,260 +10,336 @@
 
 <body>
 
-<!-- Navigation -->
-<nav class="navbar navbar-expand">
-    <div class="container">
-        <a class="navbar-brand" href="index.html">Attendee Management</a>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Attendee Management</a>
 
-        <div class="navbar-nav">
-            <a class="nav-link" href="index.html">Home</a>
-            <a class="nav-link" href="signup.html">Sign Up</a>
-            <a class="nav-link" href="sessions.html">Sessions</a>
-            <a class="nav-link" href="cart.html">Cart</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link" href="signup.html">Sign Up</a>
+                <a class="nav-link" href="sessions.html">Sessions</a>
+                <a class="nav-link" href="cart.html">Cart</a>
+            </div>
         </div>
+    </nav>
+
+    <div class="container mt-4">
+
+        <h1>Shopping Cart</h1>
+        <p>Search for conference sessions and add them to your cart.</p>
+
+        <!-- Search -->
+        <h3>Search Sessions</h3>
+
+        <input type="text" id="productSearch" placeholder="Search sessions">
+        <button id="searchButton">Search</button>
+
+        <hr>
+
+        <!-- Sessions -->
+        <h3>Available Sessions</h3>
+
+        <div id="productList">
+
+            <p>Sample Workshop - $67.99</p>
+            <button class="addToCart" data-id="1">Add to Cart</button>
+
+            <p>Future of Cybersecurity - $49.99</p>
+            <button class="addToCart" data-id="2">Add to Cart</button>
+
+            <p>Building Better Websites - $39.99</p>
+            <button class="addToCart" data-id="3">Add to Cart</button>
+
+            <p>Innovation in Technology - $79.99</p>
+            <button class="addToCart" data-id="4">Add to Cart</button>
+
+            <p>Artificial Intelligence Trends - $29.99</p>
+            <button class="addToCart" data-id="5">Add to Cart</button>
+
+            <p>Career Development Strategies - $19.99</p>
+            <button class="addToCart" data-id="6">Add to Cart</button>
+
+        </div>
+
+        <hr>
+
+        <!-- Cart -->
+        <h3>Your Cart</h3>
+
+        <table class="table">
+            <tr>
+                <th>Session</th>
+                <th>Price</th>
+                <th>Remove</th>
+            </tr>
+            <tbody id="cartItems">
+            </tbody>
+        </table>
+
+        <p>Total: $<span id="cartTotal">0.00</span></p>
+
+        <hr>
+
+        <!-- Add or Update Session -->
+        <h3>Add or Update Session</h3>
+
+        <form id="productForm">
+
+            <label for="productId">Product ID:</label>
+            <input type="number" id="productId" required>
+            <br><br>
+
+            <label for="productDescription">Description:</label>
+            <input type="text" id="productDescription" required>
+            <br><br>
+
+            <label for="productCategory">Category:</label>
+            <input type="text" id="productCategory" required>
+            <br><br>
+
+            <label for="productUnit">Unit of Measure:</label>
+            <input type="text" id="productUnit" required>
+            <br><br>
+
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" min="0" step="0.01" required>
+            <br><br>
+
+            <button type="submit" id="addProduct">Add Session</button>
+            <button type="button" id="updateProduct">Update Session</button>
+
+        </form>
+
+        <p id="formMessage"></p>
+
+        <button type="button" id="sendProducts">Send Products to API</button>
+        <p id="apiMessage"></p>
+
+
     </div>
-</nav>
 
-<div class="container mt-4">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <h1>Shopping Cart</h1>
-    <p>Search for conference sessions and add them to your cart.</p>
+    <!-- JavaScript -->
+    <script type="text/javascript">
+        let cart = [];
 
-    <!-- Search -->
-    <h3>Search Sessions</h3>
+        let productForm = document.getElementById("productForm");
+        let formMessage = document.getElementById("formMessage");
 
-    <input type="text" id="productSearch" placeholder="Search sessions">
-    <button id="searchButton">Search</button>
+        let fieldIds = [
+            "productId",
+            "productDescription",
+            "productCategory",
+            "productUnit",
+            "productPrice"
+        ];
 
-    <hr>
+        // Returns an error message for one field, or "" if the field is valid
+        function validateField(id) {
+            let value = document.getElementById(id).value.trim();
+            let rexID = /^\d+$/;
+            let rexDesc = /[A-Za-z0-9\s\-',.&:()]*$/;
+            let rexAlphaNum = /^[a-zA-Z0-9\s]+$/;
+            let rexPrice = /^[0-9]+(\.[0-9]{1,2})?$/;
 
-    <!-- Sessions -->
-    <h3>Available Sessions</h3>
+            switch (id) {
+                case "productId":
+                    if (value === "") return "Product ID is required.";
+                    if (!rexID.test(value)) {
+                        return "Product ID must be a whole number greater than 0.";
+                    }
+                    return "";
 
-    <div id="productList">
+                case "productDescription":
+                    if (value === "") return "Description is required.";
+                    if (!rexDesc.test(value)) {
+                        return "Description must be a string of characters (letters, numbers, spaces, and common punctuation allowed).";
+                    }
+                    return "";
 
-        <p>Sample Workshop - $67.99</p>
-        <button class="addToCart" data-id="1">Add to Cart</button>
+                case "productCategory":
+                    if (value === "") return "Category is required.";
+                    if (!rexAlphaNum.test(value)) {
+                        return "Category must be alphanumeric.";
+                    }
+                    return "";
 
-        <p>Future of Cybersecurity - $49.99</p>
-        <button class="addToCart" data-id="2">Add to Cart</button>
+                case "productUnit":
+                    if (value === "") return "Unit of Measure is required.";
+                    if (!rexAlphaNum.test(value)) {
+                        return "Unit of Measure must be alphanumeric.";
+                    }
+                    return "";
 
-        <p>Building Better Websites - $39.99</p>
-        <button class="addToCart" data-id="3">Add to Cart</button>
-
-        <p>Innovation in Technology - $79.99</p>
-        <button class="addToCart" data-id="4">Add to Cart</button>
-
-        <p>Artificial Intelligence Trends - $29.99</p>
-        <button class="addToCart" data-id="5">Add to Cart</button>
-
-        <p>Career Development Strategies - $19.99</p>
-        <button class="addToCart" data-id="6">Add to Cart</button>
-
-    </div>
-
-    <hr>
-
-    <!-- Cart -->
-    <h3>Your Cart</h3>
-
-    <table class="table">
-        <tr>
-            <th>Session</th>
-            <th>Price</th>
-            <th>Remove</th>
-        </tr>
-        <tbody id="cartItems">
-        </tbody>
-    </table>
-
-    <p>Total: $<span id="cartTotal">0.00</span></p>
-
-    <hr>
-
-    <!-- Add or Update Session -->
-    <h3>Add or Update Session</h3>
-
-    <form id="productForm">
-
-        <label for="productId">Product ID:</label>
-        <input type="number" id="productId" required>
-        <br><br>
-
-        <label for="productDescription">Description:</label>
-        <input type="text" id="productDescription" required>
-        <br><br>
-
-        <label for="productCategory">Category:</label>
-        <input type="text" id="productCategory" required>
-        <br><br>
-
-        <label for="productUnit">Unit of Measure:</label>
-        <input type="text" id="productUnit" required>
-        <br><br>
-
-        <label for="productPrice">Price:</label>
-        <input type="number" id="productPrice" min="0" step="0.01" required>
-        <br><br>
-
-        <button type="submit" id="addProduct">Add Session</button>
-        <button type="button" id="updateProduct">Update Session</button>
-
-    </form>
-
-    <p id="formMessage"></p>
-    
-    <button type="button" id="sendProducts">Send Products to API</button>
-    <p id="apiMessage"></p>
-
-
-</div>
-
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-<!-- JavaScript -->
-<script type="text/javascript">
-    let cart = [];
-
-    let productForm = document.getElementById("productForm");
-    let formMessage = document.getElementById("formMessage");
-
-    let fieldIds = [
-        "productId",
-        "productDescription",
-        "productCategory",
-        "productUnit",
-        "productPrice"
-    ];
-
-    // Returns an error message for one field, or "" if the field is valid
-    function validateField(id) {
-        let value = document.getElementById(id).value.trim();
-        let rexID = /^\d+$/; 
-        let rexDesc = /[A-Za-z0-9\s\-',.&:()]*$/;
-        let rexAlphaNum = /^[a-zA-Z0-9\s]+$/;
-        let rexPrice = /^[0-9]+(\.[0-9]{1,2})?$/;
-
-        switch (id) {
-            case "productId":
-                if (value === "") return "Product ID is required.";
-                if (!rexID.test(value)) {
-                    return "Product ID must be a whole number greater than 0.";
-                }
-                return "";
-
-            case "productDescription":
-                if (value === "") return "Description is required.";
-                if (!rexDesc.test(value)) {
-                    return "Description must be a string of characters (letters, numbers, spaces, and common punctuation allowed).";
-                }
-                return "";
-
-            case "productCategory":
-                if (value === "") return "Category is required.";
-                if (!rexAlphaNum.test(value)) {
-                    return "Category must be alphanumeric.";
-                }
-                return "";
-
-            case "productUnit":
-                if (value === "") return "Unit of Measure is required.";
-                if (!rexAlphaNum.test(value)) {
-                    return "Unit of Measure must be alphanumeric.";
-                }
-                return "";
-
-            case "productPrice":
-                if (value === "") return "Price is required.";
-                if (!rexPrice.test(value)) {
-                    return "Price must be a valid number with at most 2 decimal places.";
-                }
-                return "";
+                case "productPrice":
+                    if (value === "") return "Price is required.";
+                    if (!rexPrice.test(value)) {
+                        return "Price must be a valid number with at most 2 decimal places.";
+                    }
+                    return "";
+            }
+            return "";
         }
-        return "";
-    }
 
-    // Returns true if every field is valid, false otherwise.
-    function validateProductForm() {
-        let errors = [];
+        // Returns true if every field is valid, false otherwise.
+        function validateProductForm() {
+            let errors = [];
 
+            fieldIds.forEach(function (id) {
+                let input = document.getElementById(id);
+
+                input.setCustomValidity(validateField(id));
+
+                input.classList.remove("is-valid", "is-invalid");
+
+                if (!input.checkValidity()) {
+                    errors.push(input.validationMessage);
+                    input.classList.add("is-invalid");
+                } else {
+                    input.classList.add("is-valid");
+                }
+            });
+
+            if (errors.length > 0) {
+                formMessage.className = "text-danger";
+                formMessage.innerHTML = errors.join("<br>");
+                productForm.reportValidity();
+                return false;
+            }
+
+            formMessage.className = "text-success";
+            return true;
+        }
+
+        // Clear a field's error state as soon as the user starts fixing it
         fieldIds.forEach(function (id) {
-            let input = document.getElementById(id);
+            document.getElementById(id).addEventListener("input", function () {
+                this.setCustomValidity("");
+                this.classList.remove("is-invalid", "is-valid");
+            });
+        });
 
-            input.setCustomValidity(validateField(id));
+        // "Add Session" button (form submit)
+        // The browser checks required/min/step first; this runs once those pass.
+        productForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            validateProductForm();
+        });
 
-            input.classList.remove("is-valid", "is-invalid");
+        // "Update Session" button (type="button", so the browser doesn't check it on its own)
+        document.getElementById("updateProduct").addEventListener("click", function () {
+            validateProductForm();
+        });
+    </script>
 
-            if (!input.checkValidity()) {
-                errors.push(input.validationMessage);
-                input.classList.add("is-invalid");
-            } else {
-                input.classList.add("is-valid");
+    <script>
+        $(document).ready(function () {
+            let products = [];
+
+            // Load products from JSON
+            $.getJSON("sessions.json", function (data) {
+                products = data;
+                console.log(products);
+            });
+
+            // Send JSON data to API
+            $("#sendProducts").click(function () {
+                $.ajax({
+                    url: "/api/products",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(products),
+
+                    success: function (data) {
+                        $("#apiMessage").text("Products sent successfully!");
+                    },
+
+                    error: function () {
+                        $("#apiMessage").text("API not available yet.");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- jQuery -->
+    <script>
+        $(document).ready(function () {
+
+            function renderCart() {
+                const $body = $("#cartItems").empty();
+                let total = 0;
+
+                if (cart.length === 0) {
+                    $body.append('<tr><td colspan="3" class="text-muted">Your cart is empty.</td></tr>');
+                }
+
+                cart.forEach(function (item) {
+                    total += item.price;
+                    const $row = $("<tr>");
+                    $("<td>").text(item.name).appendTo($row);
+                    $("<td>").text("$" + item.price.toFixed(2)).appendTo($row);
+                    $("<td>").append(
+                        $('<button type="button" class="removeFromCart">Remove</button>').attr("data-id", item.id)
+                    ).appendTo($row);
+                    $body.append($row);
+                });
+
+                $("#cartTotal").text(total.toFixed(2));
             }
-        });
 
-        if (errors.length > 0) {
-            formMessage.className = "text-danger";
-            formMessage.innerHTML = errors.join("<br>");
-            productForm.reportValidity(); 
-            return false;
-        }
+            // Add to cart (reads name and price from the <p> just before the button)
+            $("#productList").on("click", ".addToCart", function () {
+                const $btn = $(this);
+                const parts = $btn.prev("p").text().split(" - $");
+                const item = {
+                    id: Number($btn.data("id")),
+                    name: parts[0].trim(),
+                    price: parseFloat(parts[1])
+                };
 
-        formMessage.className = "text-success";
-        return true;
-    }
+                if (cart.some(function (i) { return i.id === item.id; })) return;
 
-    // Clear a field's error state as soon as the user starts fixing it
-    fieldIds.forEach(function (id) {
-        document.getElementById(id).addEventListener("input", function () {
-            this.setCustomValidity("");
-            this.classList.remove("is-invalid", "is-valid");
-        });
-    });
+                cart.push(item);
+                $btn.prop("disabled", true).text("Added");
+                renderCart();
+            });
 
-    // "Add Session" button (form submit)
-    // The browser checks required/min/step first; this runs once those pass.
-    productForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        validateProductForm();
-    });
+            // Remove from cart
+            $("#cartItems").on("click", ".removeFromCart", function () {
+                const id = Number($(this).data("id"));
+                cart = cart.filter(function (i) { return i.id !== id; });
+                $('.addToCart[data-id="' + id + '"]').prop("disabled", false).text("Add to Cart");
+                renderCart();
+            });
 
-    // "Update Session" button (type="button", so the browser doesn't check it on its own)
-    document.getElementById("updateProduct").addEventListener("click", function () {
-        validateProductForm();
-    });
-</script>
+            // Search (hides each <p> and its button together)
+            function filterSessions() {
+                const term = $("#productSearch").val().toLowerCase().trim();
+                let visible = 0;
 
-<script>
-$(document).ready(function() {
-    let products = [];
+                $("#productList p").not("#noResults").each(function () {
+                    const match = $(this).text().toLowerCase().includes(term);
+                    $(this).toggle(match).next(".addToCart").toggle(match);
+                    if (match) visible++;
+                });
 
-    // Load products from JSON
-    $.getJSON("sessions.json", function(data) {
-        products = data;
-        console.log(products);
-    });
-
-    // Send JSON data to API
-    $("#sendProducts").click(function() {
-        $.ajax({
-            url: "/api/products",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(products),
-
-            success: function(data) {
-                $("#apiMessage").text("Products sent successfully!");
-            },
-
-            error: function() {
-                $("#apiMessage").text("API not available yet.");
+                $("#noResults").remove();
+                if (visible === 0) {
+                    $("#productList").append('<p id="noResults" class="text-muted">No sessions found.</p>');
+                }
             }
+
+            $("#searchButton").on("click", filterSessions);
+            $("#productSearch").on("input", filterSessions);
+
+            renderCart(); // shows the empty-cart row on load
         });
-    });
-});
-</script>
+    </script>
 
 </body>
+
 </html>
