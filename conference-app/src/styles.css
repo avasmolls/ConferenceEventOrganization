@@ -73,6 +73,7 @@
      font-weight: 700;
      text-transform: uppercase;
      margin-top: 2rem;
+     margin-bottom: 2rem;
   }
 
   .btn-cta:hover {
@@ -234,3 +235,48 @@
   #productList #noResults::before {
      content: none;
   }
+
+  .section-heading {
+   font-weight: 700;
+   font-size: clamp(1.5rem, 4vw, 2.25rem);
+   text-transform: uppercase;
+   margin-bottom: 1.5rem;
+}
+
+.event-strip {
+   border-top: 3px solid #000;
+   border-bottom: 3px solid #000;
+}
+
+.strip-label {
+   color: #ff4d00;
+   font-size: 0.75rem;
+   font-weight: 700;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+   margin-bottom: 0.25rem;
+}
+
+.strip-value {
+   font-weight: 700;
+   font-size: 1.25rem;
+   text-transform: uppercase;
+}
+
+.feature-card {
+   border: 1px solid #e3e3e3;
+   border-left: 4px solid #ff4d00;
+   background-color: #fff;
+}
+
+.step-number {
+   width: 2.5rem;
+   height: 2.5rem;
+   background-color: #ff4d00;
+   color: #fff;
+   font-weight: 700;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-bottom: 0.75rem;
+}
