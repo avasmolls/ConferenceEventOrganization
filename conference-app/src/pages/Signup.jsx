@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const EMPTY = { email: "", name: "", age: "", companty: "" };
+const EMPTY = { email: "", name: "", age: "", company: "" };
 
 
 export default function Signup() {
