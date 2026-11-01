@@ -17,8 +17,26 @@ const initialForm = {
 // Service layer
 
 async function postRegistration(payload) {
-    // add JSON/AJAX --> get ready to send to API but currently we are only using local storage
+    const jsonData = JSON.stringify(payload);
+
+    console.log("Registration JSON:", jsonData);
+
+    const response = await fetch(REGISTRATIONS_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: jsonData
+    });
+
+    if (!response.ok) {
+        throw new Error("Registration failed");
+    }
+
+    return response.json();
 }
+    // add JSON/AJAX --> get ready to send to API but currently we are only using local storage
+
 
 // Component
 export default function Register() {
@@ -114,9 +132,19 @@ export default function Register() {
             notes: form.notes.trim(),
         };
 
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...existing, payload]));
-        setSubmitted(true);
-    };
+        try {
+            setSubmitting(true);
+            await postRegistration(payload);
+
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...existing, payload]));
+            setSubmitted(true);
+        } catch (error) {
+            setSubmitError(error.message);
+        } finally {
+            setSubmitting(false);
+        }
+        };
+
 
     const handleReset = () => {
         setForm(initialForm);
