@@ -66,7 +66,56 @@ export default function Register() {
     };
 
     const handleSubmit = async (e) => {
-        // add form validation
+        e.preventDefault();
+        setSubmitError(null);
+        const name = form.fullName.trim();
+        const email = form.email.trim().toLowerCase();
+        const errors = [];
+
+        //Regex
+        const NAME_REGEX = /^[A-Za-z][A-Za-z\s'.-]*$/;
+        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+
+        //Name
+        if (!name) errors.push("Name is required.");
+        else if (name.length < 2) errors.push("Name must be at least 2 characters.");
+        else if (!NAME_REGEX.test(name)) errors.push("Name contains invalid characters.");
+
+        //Email
+        if (!email) errors.push("Email is required.");
+        else if (!EMAIL_REGEX.test(email)) errors.push("Email format is invalid.");
+
+        //Session
+        if (!form.session) errors.push("Session selection is required.");
+        else if (!sessions.some((s) => String(s.id) === form.session)) errors.push("The selected session is not available.");
+
+        //Participation
+        if (!form.participation) errors.push("Participation type is required.");
+        else if (!["in-person", "virtual", "vip"].includes(form.participation)) errors.push("Invalid participation type.");
+
+        // Notes
+        if (form.notes.length > 500) errors.push("Notes must be 500 characters or fewer.");
+
+        if (errors.length > 0) {
+            setSubmitError(errors.join(" "));
+            return;
+        }
+
+        const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+        if (existing.some((r) => r.email === email && r.session === form.session)) {
+            setSubmitError("This email is already registered for that session.");
+            return;
+        }
+        const payload = {
+            fullName: name,
+            email,
+            session: form.session,
+            participation: form.participation,
+            notes: form.notes.trim(),
+        };
+
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...existing, payload]));
+        setSubmitted(true);
     };
 
     const handleReset = () => {
