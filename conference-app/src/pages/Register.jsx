@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 // Configuration
+const USE_API = false; // set to true to use the API instead of local storage
 
 const SESSIONS_URL = "/sessions.json";
 const REGISTRATIONS_URL = "http://localhost:3001/registrations"; // will be replaced with our api I just have it set to my local host for now
@@ -17,23 +18,22 @@ const initialForm = {
 // Service layer
 
 async function postRegistration(payload) {
-    const jsonData = JSON.stringify(payload);
-
-    console.log("Registration JSON:", jsonData);
-
-    const response = await fetch(REGISTRATIONS_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: jsonData
-    });
-
-    if (!response.ok) {
-        throw new Error("Registration failed");
+    if (USE_API) {
+        const res = await fetch(REGISTRATIONS_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(`Registration failed (${res.status})`);
+        return res.json();
     }
 
-    return response.json();
+    // Local fallback: simulate network latency and save to localStorage
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+    const saved = { id: Date.now(), ...payload };
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...existing, saved]));
+    return saved;
 }
     // add JSON/AJAX --> get ready to send to API but currently we are only using local storage
 
