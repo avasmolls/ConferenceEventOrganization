@@ -9,7 +9,9 @@ export default function NavBar() {
         ["/signup", "Sign Up"],
         ["/sessions", "Sessions"],
         ["/cart", "Cart"],
-        ["/register", "Register"]
+        ["/register", "Register"],
+        ["/submissions", "Submit"],
+        ["/approvals", "Approvals"]
     ];
     return (
         <nav className="navbar navbar-expand py-3">

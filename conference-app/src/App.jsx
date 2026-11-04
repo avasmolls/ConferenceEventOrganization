@@ -6,6 +6,8 @@ import Signup from "./pages/Signup";
 import Sessions from "./pages/Sessions";
 import Cart from "./pages/Cart";
 import Register from "./pages/Register";
+import Submissions from "./pages/Submissions";
+import Approvals from "./pages/Approvals";
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
         <Route path="/sessions" element={<Sessions />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/submissions" element={<Submissions />} />
+        <Route path="/approvals" element={<Approvals />} />
       </Routes>
     </>
   );
