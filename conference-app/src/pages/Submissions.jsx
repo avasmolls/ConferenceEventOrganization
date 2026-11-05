@@ -44,20 +44,32 @@ async function postSubmission(payload) {
 
 // Component
 export default function Submissions() {
-  // Form state and validation
+  // Form state
   const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [sessionsError, setSessionsError] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleReset = () => {
+    setForm(initialForm);
+    setSubmitted(false);
+    setSubmitError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     setSubmitError(null);
+
+    // ADD VALIDATION HERE
+    
   };
+  
 
   if (submitted) {
     return (
@@ -76,9 +88,6 @@ export default function Submissions() {
     <div className="container mt-4">
       <h2>Submit a Session Proposal</h2>
 
-      {sessionsError && (
-        <div className="alert alert-danger">{sessionsError}</div>
-      )}
       {submitError && (
         <div className="alert alert-danger">{submitError}</div>
       )}
