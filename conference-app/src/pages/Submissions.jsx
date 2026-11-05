@@ -6,7 +6,6 @@ const USE_API = false; // set to true to use the API instead of local storage
 const SUBMISSIONS_URL = "http://localhost:3001/submissions";
 const LOCAL_STORAGE_KEY = "conferenceSubmissions";
 
-// use your own category list here if you already have one
 const CATEGORIES = ["Keynote", "Workshop", "Panel", "Lightning Talk", "Technology", "Other"];
 
 const initialForm = {
