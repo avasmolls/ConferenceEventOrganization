@@ -7,7 +7,7 @@ const SUBMISSIONS_URL = "http://localhost:3001/submissions";
 const LOCAL_STORAGE_KEY = "conferenceSubmissions";
 
 // use your own category list here if you already have one
-const CATEGORIES = ["Keynote", "Workshop", "Panel", "Lightning Talk", "Technology","Other"];
+const CATEGORIES = ["Keynote", "Workshop", "Panel", "Lightning Talk", "Technology", "Other"];
 
 const initialForm = {
   title: "",
@@ -26,10 +26,7 @@ async function postSubmission(payload) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      throw new Error(data.errors?.join(" ") || `Submission failed (${res.status})`);
-    }
+    if (!res.ok) throw new Error(`Registration failed (${res.status})`);
     return res.json();
   }
 
@@ -67,7 +64,7 @@ export default function Submissions() {
     return (
       <div className="container mt-4">
         <div className="alert alert-success">
-          Thanks, {form.speaker}! Your session proposal "{form.title}" has been submitted for review. 
+          Thanks, {form.speaker}! Your session proposal "{form.title}" has been submitted for review.
         </div>
         <button className="btn btn-secondary" onClick={handleReset}>
           Submit Another Proposal
