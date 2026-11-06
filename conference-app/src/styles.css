@@ -426,3 +426,213 @@
       margin-top: 0.5rem;
    }
 }
+
+/* Submit a Proposal and Register forms (Submissions.jsx, Register.jsx) --------
+   Same card as the sign-up and cart pages. Neither form has an id, so each is
+   found through a field only it contains - nothing in the JSX had to change. */
+form:has(textarea[name="abstract"]),
+form:has(#fullName) {
+   padding: 1.5rem;
+   margin-top: 1rem;
+   margin-bottom: 1rem;
+   background-color: #fff;
+   border: 1px solid var(--bs-border-color-translucent);
+   border-radius: var(--bs-border-radius);
+   box-shadow: var(--bs-box-shadow-sm);
+}
+
+/* The proposal form has plain fields and no Bootstrap classes, so these rules
+   recreate .form-label, .form-control, .form-select and .btn-primary. The form
+   spaces its fields with <br /><br />, which are hidden rather than removed. */
+form:has(textarea[name="abstract"]) br {
+   display: none;
+}
+
+form:has(textarea[name="abstract"]) label {
+   display: block;
+   margin-bottom: 0.5rem;
+}
+
+form:has(textarea[name="abstract"]) :is(input, select, textarea) {
+   display: block;
+   width: 100%;
+   padding: 0.375rem 0.75rem;
+   margin-bottom: 1rem;
+   background-color: #fff;
+   border: 1px solid var(--bs-border-color);
+   border-radius: var(--bs-border-radius);
+}
+
+form:has(textarea[name="abstract"]) :is(input, select, textarea):focus {
+   outline: 0;
+   border-color: #ff4d00;
+   box-shadow: 0 0 0 0.25rem rgba(255, 77, 0, 0.25);
+}
+
+/* Keep Bootstrap's validation colours if the form's script marks a field */
+form:has(textarea[name="abstract"]) :is(input, select, textarea).is-invalid {
+   border-color: var(--bs-form-invalid-border-color);
+}
+
+form:has(textarea[name="abstract"]) :is(input, select, textarea).is-valid {
+   border-color: var(--bs-form-valid-border-color);
+}
+
+form:has(textarea[name="abstract"]) :is(input, select, textarea).is-invalid:focus {
+   box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
+}
+
+form:has(textarea[name="abstract"]) :is(input, select, textarea).is-valid:focus {
+   box-shadow: 0 0 0 0.25rem rgba(var(--bs-success-rgb), 0.25);
+}
+
+/* Same arrow as .form-select */
+form:has(textarea[name="abstract"]) select {
+   padding-right: 2.25rem;
+   appearance: none;
+   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+   background-repeat: no-repeat;
+   background-position: right 0.75rem center;
+   background-size: 16px 12px;
+}
+
+form:has(textarea[name="abstract"]) textarea {
+   min-height: 6rem;
+}
+
+form:has(textarea[name="abstract"]) button {
+   padding: 0.375rem 0.75rem;
+   background-color: #ff4d00;
+   color: #fff;
+   border: 1px solid #ff4d00;
+   border-radius: var(--bs-border-radius);
+   cursor: pointer;
+   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+form:has(textarea[name="abstract"]) button:hover:not(:disabled) {
+   background-color: #000;
+   border-color: #000;
+}
+
+form:has(textarea[name="abstract"]) button:focus-visible {
+   outline: 2px solid #000;
+   outline-offset: 2px;
+}
+
+form:has(textarea[name="abstract"]) button:disabled {
+   opacity: 0.65;
+   cursor: default;
+}
+
+/* Approval cards (Approvals.jsx) ----------------------------------------------
+   Same orange edge as the home page's .feature-card. Approve and Reject keep
+   Bootstrap's green and red because those colours carry the meaning. */
+.container > .card.p-3.mt-3 {
+   border: 1px solid #e3e3e3;
+   border-left: 4px solid #ff4d00;
+   border-radius: 0;
+}
+
+.container > .card.p-3.mt-3 h4 {
+   font-weight: 700;
+}
+
+.container > .card.p-3.mt-3 p {
+   margin-bottom: 0.5rem;
+}
+
+.container > .card.p-3.mt-3 > div {
+   margin-top: 0.5rem;
+}
+
+/* Session ticket fixes (Sessions.jsx) -----------------------------------------
+   .bg-opacity-15 is not a Bootstrap class, so the ID badge came out solid grey
+   with grey text and could not be read. Bootstrap's colour utilities use
+   !important, so these overrides need it too. */
+.ticket-card .badge.bg-secondary {
+   background-color: #f1f1f1 !important;
+   color: #495057 !important;
+}
+
+/* The price was wider than the stub. Less padding and a smaller price keep it
+   inside the tear line, and leave room for the whole category name. */
+.ticket-stub {
+   padding: 0.75rem 0.5rem !important;
+}
+
+.ticket-stub h3 {
+   font-size: 1.35rem;
+}
+
+.ticket-stub .badge {
+   padding-inline: 0.35rem;
+   font-size: 0.65rem;
+}
+
+/* .text-white-50 was too faint to read on the orange */
+.ticket-stub .text-white-50 {
+   color: #fff !important;
+   font-size: 0.7rem;
+}
+
+/* Let long titles wrap instead of cutting off */
+.ticket-card .card-title {
+   overflow: visible;
+   white-space: normal;
+}
+
+/* Edit button - the outlined orange used by the cart page, not Bootstrap blue */
+.ticket-card .btn-outline-primary {
+   --bs-btn-color: #ff4d00;
+   --bs-btn-border-color: #ff4d00;
+   --bs-btn-hover-color: #fff;
+   --bs-btn-hover-bg: #000;
+   --bs-btn-hover-border-color: #000;
+   --bs-btn-active-color: #fff;
+   --bs-btn-active-bg: #000;
+   --bs-btn-active-border-color: #000;
+}
+
+/* Sign-up page ----------------------------------------------------------------
+   The card sits directly inside a .row with no column, so the row's negative
+   margins pushed it 12px past the content on each side. */
+.row.justify-content-center > .card {
+   width: calc(100% - 1.5rem);
+   margin-inline: 0.75rem;
+}
+
+/* Focus ring - orange instead of Bootstrap blue on every Bootstrap field */
+.form-control:focus,
+.form-select:focus {
+   border-color: #ff4d00;
+   box-shadow: 0 0 0 0.25rem rgba(255, 77, 0, 0.25);
+}
+
+/* Navbar on narrower screens --------------------------------------------------
+   The title and links do not fit on one row below 1200px, which made every page
+   scroll sideways. They now wrap. The desktop navbar is unchanged. */
+@media (max-width: 1199.98px) {
+   .navbar > .container {
+      flex-wrap: wrap;
+   }
+
+   .navbar-nav {
+      flex-wrap: wrap;
+      width: 100%;
+      margin-left: 0 !important;
+   }
+
+   .navbar-expand .navbar-nav .nav-link {
+      padding-left: 0;
+      padding-right: 0.875rem;
+      white-space: nowrap;
+   }
+}
+
+@media (max-width: 575.98px) {
+   .site-title {
+      font-size: 1.5rem;
+      white-space: normal;
+   }
+}
