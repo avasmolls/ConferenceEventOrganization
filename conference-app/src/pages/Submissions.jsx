@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // Configuration
-const USE_API = false; // set to true to use the API instead of local storage
+const USE_API = true; // set to true to use the API instead of local storage
 
 const SUBMISSIONS_URL = "http://localhost:3001/submissions";
 const LOCAL_STORAGE_KEY = "conferenceSubmissions";
@@ -49,7 +49,6 @@ export default function Submissions() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
-  const [sessionsError, setSessionsError] = useState(null);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -65,7 +64,6 @@ export default function Submissions() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
     setSubmitError(null);
 
     // Validation
@@ -75,7 +73,7 @@ export default function Submissions() {
 
     if (!form.title.trim()) {
       newErrors.title = "Session title is required.";
-    } else if (!TITLE_REGEX.test(form.email.trim())) {
+    } else if (!TITLE_REGEX.test(form.title.trim())) {
       newErrors.title = "Session title can only contain letters, numbers, and spaces.";
     }
 

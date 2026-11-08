@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 // Configuration
-const USE_API = false; // set to true to use the API instead of local storage
+const USE_API = true; // set to true to use the API instead of local storage
 
 const SUBMISSIONS_URL = "http://localhost:3001/submissions";
 const LOCAL_STORAGE_KEY = "conferenceSubmissions";
@@ -10,6 +10,7 @@ const LOCAL_STORAGE_KEY = "conferenceSubmissions";
 
 async function getSubmissions(signal) {
   // fetch from API -- this should be done by whoever is responsible for AJAX/JSON
+
 }
 
 async function patchSubmissionStatus(id, status) {
