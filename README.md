@@ -139,60 +139,107 @@ The migration from jQuery-based interactions to React allows interface updates t
 ---
 
 ## Getting Started
-
+ 
 ### Prerequisites
-
+ 
 Before running the project, install:
-
+ 
 - [Node.js](https://nodejs.org/) (compatible with Vite 8)
 - npm
 - Git
-
 ### Installation
-
+ 
 **1. Clone the repository**
-
+ 
 ```bash
 git clone https://github.com/avasmolls/ConferenceEventOrganization.git
 ```
-
+ 
 **2. Navigate to the application directory**
-
+ 
 ```bash
 cd ConferenceEventOrganization/conference-app
 ```
-
-**3. Install dependencies**
-
+ 
+**3. Install frontend dependencies**
+ 
 ```bash
 npm install
 ```
-
-**4. Start the development server**
-
+ 
+**4. Install backend dependencies**
+ 
+The backend (Node.js/Express API) lives in the `server` folder.
+ 
+```bash
+cd server
+npm install
+cd ..
+```
+ 
+**5. Start the backend server**
+ 
+In a terminal, from the `conference-app` directory:
+ 
+```bash
+cd server
+node server.js
+```
+ 
+The API runs at `http://localhost:3001`. Submissions are saved to `server/data/submissions.json`, which is created automatically on first run. Leave this terminal running.
+ 
+**6. Start the development server**
+ 
+Open a second terminal, go to the `conference-app` directory, and run:
+ 
 ```bash
 npm run dev
 ```
-
-**5. Open the application**
-
+ 
+**7. Open the application**
+ 
 Open the local development URL shown in the terminal, typically:
-
+ 
 ```text
 http://localhost:5173
 ```
-
+ 
+### Using the App
+ 
+- **Submissions page:** fill out the session proposal form and submit it. New proposals are saved with a status of `pending`.
+- **Approvals page:** review pending proposals and click **Approve** or **Reject**. Use the dropdown to filter by status.
 ### Available Scripts
-
+ 
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Starts the Vite development server |
 | `npm run build` | Generates a production build |
 | `npm run preview` | Previews the production build |
 | `npm run lint` | Runs Oxlint static analysis |
-
-Run these commands from the `conference-app` directory.
-
+| `node server/server.js` | Starts the backend API on port 3001 |
+ 
+Run the `npm` commands from the `conference-app` directory.
+ 
+### Configuration
+ 
+- `Submissions.jsx` and `Approvals.jsx` each have a `USE_API` flag at the top.
+  - `true`: data is stored through the backend API (the server must be running).
+  - `false`: data is stored in the browser's localStorage (no server needed).
+- The API URL is set by `SUBMISSIONS_URL` (`http://localhost:3001/submissions`). If you change the backend port in `server/server.js`, update it in both files.
+- The backend allows requests from `http://localhost:5173` (Vite's default). If Vite starts on a different port, add it to the `cors` origin list in `server/server.js`.
+### API Endpoints
+ 
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/submissions` | List all submissions (optional `?status=pending`) |
+| POST | `/submissions` | Create a new submission |
+| PATCH | `/submissions/:id` | Update status (`{ "status": "approved" \| "rejected" }`) |
+ 
+### Troubleshooting
+ 
+- **CORS error in the browser console:** the frontend's port isn't in the backend's allowed origins list.
+- **"Failed to fetch":** the backend isn't running, or its port doesn't match `SUBMISSIONS_URL`.
+- **Port already in use:** close the other process using that port, or change the port number.
 ---
 
 ## Application Pages
