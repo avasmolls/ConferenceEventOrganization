@@ -8,14 +8,50 @@ const LOCAL_STORAGE_KEY = "conferenceSubmissions";
 
 // Service layer
 
-async function getSubmissions(signal) {
-  // fetch from API -- this should be done by whoever is responsible for AJAX/JSON
 
+async function getSubmissions(signal) {
+  if (USE_API) {
+    const res = await fetch(SUBMISSIONS_URL, { signal });
+
+    if (!res.ok) {
+      throw new Error(`Failed to load submissions (${res.status})`);
+    }
+
+    return res.json();
+  }
+
+  return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
 }
+
+
 
 async function patchSubmissionStatus(id, status) {
-  // patch to API -- this should be done by whoever is responsible for AJAX/JSON
+  if (USE_API) {
+    const res = await fetch(`${SUBMISSIONS_URL}/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to update submission (${res.status})`);
+    }
+
+    return res.json();
+  }
+
+  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+
+  const updated = existing.map((s) =>
+    s.id === id
+      ? { ...s, status, decidedAt: new Date().toISOString() }
+      : s
+  );
+
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+  return updated.find((s) => s.id === id);
 }
+
 
 // Component
 export default function Approvals() {
