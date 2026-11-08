@@ -115,62 +115,58 @@ export default function Approvals() {
 
   return (
     <div className="container mt-4">
-      <h2>Session Proposal Approvals</h2>
 
-      {loadError && (
-        <div className="alert alert-danger">{loadError}</div>
-      )}
-      {updateError && (
-        <div className="alert alert-danger">{updateError}</div>
-      )}
-      {loading && <p>Loading proposals...</p>}
+      {/* Session Proposal Approval Bootstrap  */}
+      <h2 className="mb-3">Session Proposal Approvals</h2>
+      
+      {/* Filter Buttons */}
+      <div className="btn-group mb-4" role="group" aria-label="Filter by status">
+        {STATUS_FILTERS.map((f) => (
+          <button
+            key={f}
+            type="button"
+            className={`btn ${statusFilter === f ? "btn-primary" : "btn-outline-primary"}`}
+            onClick={() => setStatusFilter(f)}
+          >
+            {label(f)} ({countFor(f)})
+          </button>
+        ))}
+      </div>
 
-      {!loading && !loadError && (
-        <div className="btn-group mt-2" role="group" aria-label="Filter by status">
-          {STATUS_FILTERS.map((f) => (
-            <button
-              key={f}
-              type="button"
-              className={`btn ${statusFilter === f ? "btn-primary" : "btn-outline-primary"}`}
-              onClick={() => setStatusFilter(f)}
-            >
-              {label(f)} ({countFor(f)})
-            </button>
-          ))}
-        </div>
-      )}
-
-      {!loading && !loadError && submissions.length === 0 && (
-        <p className="mt-3">No proposals have been submitted yet.</p>
-      )}
-      {!loading && !loadError && submissions.length > 0 && visibleSubmissions.length === 0 && (
-        <p className="mt-3">No {statusFilter} proposals.</p>
-      )}
-
+      {/* Proposals List (Cards) */}
       {visibleSubmissions.map((s) => (
-        <div className="card p-3 mt-3" key={s.id}>
-          <h4>{s.title}</h4>
+        <div className="card p-4 shadow-sm mb-3 border-0" key={s.id}>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <h4 className="h5 fw-bold mb-0">{s.title}</h4>
+            <span className={`badge ${s.status === "approved" ? "bg-success" : s.status === "rejected" ? "bg-danger" : "bg-secondary"}`}>
+              {label(s.status)}
+            </span>
+          </div>
 
-          <p>Speaker: {s.speaker} ({s.email})</p>
-          <p>Category: {s.category}</p>
-          <p>{s.abstract}</p>
+          <p className="mb-1"><strong>Speaker:</strong> {s.speaker} ({s.email}) · <strong>Category:</strong> {s.category} 
+          </p>
+          <p className="mb-3">{s.abstract}</p>
 
-          <p>Status: {label(s.status)}</p>
-
-          <div>
-            <button type="button" className="btn btn-success me-2"
+        {/* Approved */}
+          <div className="d-flex gap-2">
+            <button type="button" 
+              className="btn btn-success btn-sm px-3"
               disabled={updatingId === s.id || s.status === "approved"}
-              onClick={() => handleReview(s.id, "approved")}>
+              onClick={() => handleReview(s.id, "approved")}
+            >
               Approve
             </button>
 
-            <button type="button" className="btn btn-danger"
-              disabled={updatingId === s.id || s.status === "rejected"}
-              onClick={() => handleReview(s.id, "rejected")}>
-              Reject
-            </button>
-          </div>
+        {/* Rejected */}
+          <button type="button" 
+            className="btn btn-danger btn-sm px-3"
+            disabled={updatingId === s.id || s.status === "rejected"}
+            onClick={() => handleReview(s.id, "rejected")}
+          >
+            Reject
+          </button>
         </div>
+      </div>
       ))}
     </div>
   );
