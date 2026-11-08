@@ -6,8 +6,9 @@ const USE_API = true; // set to true to use the API instead of local storage
 const SUBMISSIONS_URL = "http://localhost:3001/submissions";
 const LOCAL_STORAGE_KEY = "conferenceSubmissions";
 
-// Service layer
+const STATUS_FILTERS = ["all", "pending", "approved", "rejected"];
 
+// Service layer
 
 async function getSubmissions(signal) {
   if (USE_API) {
@@ -22,8 +23,6 @@ async function getSubmissions(signal) {
 
   return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
 }
-
-
 
 async function patchSubmissionStatus(id, status) {
   if (USE_API) {
@@ -52,7 +51,6 @@ async function patchSubmissionStatus(id, status) {
   return updated.find((s) => s.id === id);
 }
 
-
 // Component
 export default function Approvals() {
   // (GET) state
@@ -61,8 +59,11 @@ export default function Approvals() {
   const [loadError, setLoadError] = useState(null);
 
   // (PATCH) state
-  const [updatingId, setUpdatingId] = useState(false);
+  const [updatingId, setUpdatingId] = useState(null);
   const [updateError, setUpdateError] = useState(null);
+
+  // Filter state
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // GET submissions
   useEffect(() => {
@@ -86,8 +87,6 @@ export default function Approvals() {
   }, []);
 
   // approve/reject submission
-
-
   const handleReview = async (id, status) => {
     setUpdateError(null);
     try {
@@ -103,6 +102,17 @@ export default function Approvals() {
 
   const label = (status) => status.charAt(0).toUpperCase() + status.slice(1);
 
+  // Filtering and counts
+  const countFor = (status) =>
+    status === "all"
+      ? submissions.length
+      : submissions.filter((s) => s.status === status).length;
+
+  const visibleSubmissions =
+    statusFilter === "all"
+      ? submissions
+      : submissions.filter((s) => s.status === statusFilter);
+
   return (
     <div className="container mt-4">
       <h2>Session Proposal Approvals</h2>
@@ -114,11 +124,30 @@ export default function Approvals() {
         <div className="alert alert-danger">{updateError}</div>
       )}
       {loading && <p>Loading proposals...</p>}
-      {!loading && !loadError && submissions.length === 0 && (
-        <p>No proposals have been submitted yet.</p>
+
+      {!loading && !loadError && (
+        <div className="btn-group mt-2" role="group" aria-label="Filter by status">
+          {STATUS_FILTERS.map((f) => (
+            <button
+              key={f}
+              type="button"
+              className={`btn ${statusFilter === f ? "btn-primary" : "btn-outline-primary"}`}
+              onClick={() => setStatusFilter(f)}
+            >
+              {label(f)} ({countFor(f)})
+            </button>
+          ))}
+        </div>
       )}
 
-      {submissions.map((s) => (
+      {!loading && !loadError && submissions.length === 0 && (
+        <p className="mt-3">No proposals have been submitted yet.</p>
+      )}
+      {!loading && !loadError && submissions.length > 0 && visibleSubmissions.length === 0 && (
+        <p className="mt-3">No {statusFilter} proposals.</p>
+      )}
+
+      {visibleSubmissions.map((s) => (
         <div className="card p-3 mt-3" key={s.id}>
           <h4>{s.title}</h4>
 

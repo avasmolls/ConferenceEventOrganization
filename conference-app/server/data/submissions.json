@@ -6,8 +6,19 @@
     "email": "nodejs@gmail.com",
     "category": "Keynote",
     "abstract": "I am testing node.js",
-    "status": "approved",
+    "status": "rejected",
     "submittedAt": "2026-11-08T18:33:14.605Z",
-    "decidedAt": "2026-11-08T18:33:23.304Z"
+    "decidedAt": "2026-11-08T21:50:41.457Z"
+  },
+  {
+    "id": 1794174678716,
+    "title": "Marketing Research",
+    "speaker": "John Doe",
+    "email": "jdoe11@gmail.com",
+    "category": "Workshop",
+    "abstract": "Pretend there's an abstract here",
+    "status": "approved",
+    "submittedAt": "2026-11-08T21:51:18.716Z",
+    "decidedAt": "2026-11-08T21:51:27.056Z"
   }
 ]
