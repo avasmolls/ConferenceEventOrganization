@@ -148,7 +148,7 @@ export default function Submissions() {
 
       <form onSubmit={handleSubmit} noValidate>
 
-        // Session Title
+        {/* Session Title */}
         <div className="mb-3">
           <label htmlFor="title" className="form-label fw-semibold">Session Title:</label>
           <input 
@@ -163,7 +163,7 @@ export default function Submissions() {
           {errors.title && <div className="text-danger small mt-1">{errors.title}</div>}
         </div>
         
-        // Speaker Name
+        {/* Speaker Name */}
         <div className="mb-3">
           <label htmlFor="speaker" className="form-label fw-semibold">Speaker Name:</label>
           <input 
@@ -178,7 +178,7 @@ export default function Submissions() {
           {errors.speaker && <div className="text-danger small mt-1">{errors.speaker}</div>}
         </div>
 
-        // Speaker Email
+        {/* Speaker Email */}
         <div className="mb-3">
           <label htmlFor="email" className="form-label fw-semibold">Speaker Email:</label>
           <input
@@ -193,7 +193,7 @@ export default function Submissions() {
           {errors.email && <div className="text-danger small mt-1">{errors.email}</div>}
         </div>
 
-        // Category Selection
+        {/* Category Selection */}
         <div className="mb-3">
           <label htmlFor="category" className="form-label fw-semibold">Category:</label>
           <select
@@ -212,7 +212,7 @@ export default function Submissions() {
           {errors.category && <div className="text-danger small mt-1">{errors.category}</div>}
         </div>
 
-        // Session Abstract
+        {/* Session Abstract */}
         <div className="mb-3">
           <label htmlFor="abstract" className="form-label fw-semibold">Session Abstract:</label>
           <textarea
@@ -227,7 +227,7 @@ export default function Submissions() {
           {errors.abstract && <div className="text-danger small mt-1">{errors.abstract}</div>}
         </div>
 
-        // Submit Button
+        {/* Submit Button */}
         <button type="submit" className="btn btn-primary w-100 py-2" disabled={submitting}>
           {submitting ? "Submitting..." : "Submit Proposal"}
         </button>
