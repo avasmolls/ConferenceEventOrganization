@@ -140,49 +140,95 @@ export default function Submissions() {
 
   return (
     <div className="container mt-4">
-      <h2>Submit a Session Proposal</h2>
+      <h2 className="mb-4">Submit a Session Proposal</h2>
 
       {submitError && (
         <div className="alert alert-danger">{submitError}</div>
       )}
 
       <form onSubmit={handleSubmit} noValidate>
-        <label>Session Title:</label>
-        <input type="text" name="title" value={form.title}
-          onChange={handleChange} required />
-          {errors.title && <div className="text-danger">{errors.title}</div>}
-        <br /><br />
 
-        <label>Speaker Name:</label>
-        <input type="text" name="speaker" value={form.speaker}
-          onChange={handleChange} required />
-          {errors.speaker && <div className="text-danger">{errors.speaker}</div>}
-        <br /><br />
+        // Session Title
+        <div className="mb-3">
+          <label htmlFor="title" className="form-label fw-semibold">Session Title:</label>
+          <input 
+            type="text" 
+            id="title" 
+            name="title" 
+            className="form-control" 
+            value={form.title} 
+            onChange={handleChange} 
+            required 
+          />
+          {errors.title && <div className="text-danger small mt-1">{errors.title}</div>}
+        </div>
+        
+        // Speaker Name
+        <div className="mb-3">
+          <label htmlFor="speaker" className="form-label fw-semibold">Speaker Name:</label>
+          <input 
+            type="text" 
+            id="speaker" 
+            name="speaker" 
+            className="form-control" 
+            value={form.speaker} 
+            onChange={handleChange} 
+            required 
+          />
+          {errors.speaker && <div className="text-danger small mt-1">{errors.speaker}</div>}
+        </div>
 
-        <label>Speaker Email:</label>
-        <input type="email" name="email" value={form.email}
-          onChange={handleChange} required />
-          {errors.email && <div className="text-danger">{errors.email}</div>}
-        <br /><br />
+        // Speaker Email
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label fw-semibold">Speaker Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className="form-control"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          {errors.email && <div className="text-danger small mt-1">{errors.email}</div>}
+        </div>
 
-        <label>Category:</label>
-        <select name="category" value={form.category}
-          onChange={handleChange} required>
-          <option value="" disabled>Choose a Category</option>
-          {CATEGORIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-        {errors.category && <div className="text-danger">{errors.category}</div>}
-        <br /><br />
+        // Category Selection
+        <div className="mb-3">
+          <label htmlFor="category" className="form-label fw-semibold">Category:</label>
+          <select
+            id="category"
+            name="category"
+            className="form-select"
+            value={form.category}
+            onChange={handleChange}
+            required
+            >
+              <option value=""  disabled>Choose a Category</option>
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          {errors.category && <div className="text-danger small mt-1">{errors.category}</div>}
+        </div>
 
-        <label>Session Abstract:</label>
-        <textarea name="abstract" value={form.abstract}
-          onChange={handleChange} required />
-          {errors.abstract && <div className="text-danger">{errors.abstract}</div>}
-        <br /><br />
+        // Session Abstract
+        <div className="mb-3">
+          <label htmlFor="abstract" className="form-label fw-semibold">Session Abstract:</label>
+          <textarea
+            id="abstract"
+            name="abstract"
+            className="form-control"
+            rows="4"
+            value={form.abstract}
+            onChange={handleChange}
+            required
+          />
+          {errors.abstract && <div className="text-danger small mt-1">{errors.abstract}</div>}
+        </div>
 
-        <button type="submit" disabled={submitting}>
+        // Submit Button
+        <button type="submit" className="btn btn-primary w-100 py-2" disabled={submitting}>
           {submitting ? "Submitting..." : "Submit Proposal"}
         </button>
       </form>
