@@ -1,51 +1,124 @@
 
+
 /* =========================================
-   NAVIGATION
+   NAVBAR
    ========================================= */
 
+.site-navbar {
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #eaeaea;
+    padding: 1.25rem 0;
+}
+
+/* Navbar container */
+.navbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+/* Website title */
 .site-title {
-    font-weight: 700;
-    font-size: clamp(2rem, 5vw, 3rem);
-    letter-spacing: -0.04cm;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
     text-transform: uppercase;
-    line-height: 1;
-}
-
-.navbar .nav-link {
+    text-decoration: none;
     color: #000;
+    white-space: nowrap;
+}
+
+.site-title:hover {
+    color: #000;
+}
+
+/* Navigation links container */
+.navbar-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* Individual links */
+.navbar-link {
     font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
 
-.navbar .nav-link.active {
-    font-weight: 700;
-}
-
-.navbar .nav-link:hover {
+/* Hover */
+.navbar-link:hover {
     color: #ff4d00;
 }
 
-/* Responsive navbar */
+/* Active page */
+.navbar-link.active {
+    color: #ff4d00;
+    font-weight: 700;
+    border-bottom-color: #ff4d00;
+}
+
+/* Keyboard focus */
+.navbar-link:focus-visible,
+.site-title:focus-visible {
+    outline: 2px solid #ff4d00;
+    outline-offset: 4px;
+}
+
+/* =========================================
+   TABLET
+   ========================================= */
+
 @media (max-width: 1199.98px) {
-    .navbar > .container {
-        flex-wrap: wrap;
+    .navbar-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
     }
 
-    .navbar-nav {
-        flex-wrap: wrap;
-        width: 100%;
-        margin-left: 0 !important;
+    .site-title {
+        font-size: 2rem;
+        text-align: center;
     }
 
-    .navbar-expand .navbar-nav .nav-link {
-        padding-left: 0;
-        padding-right: 0.875rem;
-        white-space: nowrap;
+    .navbar-links {
+        justify-content: center;
+        gap: 1.5rem;
     }
 }
 
+/* =========================================
+   MOBILE
+   ========================================= */
+
 @media (max-width: 575.98px) {
+    .site-navbar {
+        padding: 1rem 0;
+    }
+
     .site-title {
         font-size: 1.5rem;
         white-space: normal;
+    }
+
+    .navbar-links {
+        justify-content: center;
+        gap: 0.5rem 1rem;
+    }
+
+    .navbar-link {
+        font-size: 0.85rem;
+        padding: 0.4rem 0;
     }
 }
