@@ -1,13 +1,15 @@
 // server/server.js
-// Setup:  npm init -y && npm install express cors
+// Setup:  npm init -y && npm install express cors mongoose dotenv
 // Run:    node server.js   (listens on http://localhost:3001)
+require("dotenv").config();
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const DATA_FILE = path.join(__dirname, "data", "submissions.json");
 const CATEGORIES = ["Keynote", "Workshop", "Panel", "Lightning Talk", "Technology", "Other"];
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,4 +71,24 @@ app.patch("/submissions/:id", (req, res) => {
   res.json(item);
 });
 
-app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+// Serve the built React app (if you run `npm run build` in the client)
+const DIST_DIR = path.join(__dirname, "..", "dist");
+app.use(express.static(DIST_DIR));
+// Fallback to index.html for SPA routing
+app.use((req, res, next) => {
+  if(req.method !== "GET") return next();
+  res.sendFile(path.join(DIST_DIR, "index.html"), (err) => err && next());
+});
+
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("Connected to MongoDB: ", mongoose.connection.name);
+    // Start the server
+    app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB: ", err.message);
+    process.exit(1);
+  });

@@ -6,9 +6,9 @@
     "email": "nodejs@gmail.com",
     "category": "Keynote",
     "abstract": "I am testing node.js",
-    "status": "rejected",
+    "status": "approved",
     "submittedAt": "2026-11-08T18:33:14.605Z",
-    "decidedAt": "2026-11-08T21:50:41.457Z"
+    "decidedAt": "2026-11-08T22:02:30.037Z"
   },
   {
     "id": 1794174678716,
@@ -20,5 +20,15 @@
     "status": "approved",
     "submittedAt": "2026-11-08T21:51:18.716Z",
     "decidedAt": "2026-11-08T21:51:27.056Z"
+  },
+  {
+    "id": 1794175307829,
+    "title": "Here is a Title",
+    "speaker": "Full Name",
+    "email": "fullname@email.com",
+    "category": "Workshop",
+    "abstract": "Here is an abstract.",
+    "status": "pending",
+    "submittedAt": "2026-11-08T22:01:47.829Z"
   }
 ]
