@@ -1,0 +1,26 @@
+
+/* =========================================
+   SESSION APPROVALS PAGE
+   ========================================= */
+
+/* Approval cards */
+.container > .card.p-3.mt-3 {
+    border: 1px solid #e3e3e3;
+    border-left: 4px solid #ff4d00;
+    border-radius: 0;
+}
+
+/* Card heading */
+.container > .card.p-3.mt-3 h4 {
+    font-weight: 700;
+}
+
+/* Card paragraphs */
+.container > .card.p-3.mt-3 p {
+    margin-bottom: 0.5rem;
+}
+
+/* Approval action buttons */
+.container > .card.p-3.mt-3 > div {
+    margin-top: 0.5rem;
+}
