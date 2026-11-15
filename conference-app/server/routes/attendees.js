@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Attendee = require("./Attendee");
+const Attendee = require("../models/Attendee");
 
 // GET all attendees
 router.get("/", async (req, res) => {
@@ -35,4 +35,4 @@ router.post("/", async (req, res) => {
   }
 });
 
-module.exports = mongoose.model("Attendee", attendeeSchema);
+module.exports = router;

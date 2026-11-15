@@ -1,6 +1,3 @@
-const express = require("express");
-const router = express.Router();
-const Attendee = require("../models/Attendee");
 const mongoose = require("mongoose");
 
 const attendeeSchema = new mongoose.Schema({
