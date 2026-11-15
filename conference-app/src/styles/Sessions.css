@@ -1,0 +1,82 @@
+
+/* =========================================
+   CONFERENCE SESSIONS PAGE
+   ========================================= */
+
+/* Ticket card */
+.ticket-card {
+    border-radius: 0;
+    border: 1px solid #e3e3e3 !important;
+}
+
+/* Orange ticket stub */
+.ticket-stub {
+    background-color: #ff4d00 !important;
+    position: relative;
+    border-right: 2px dashed rgba(255, 255, 255, 0.65);
+    padding: 0.75rem 0.5rem !important;
+}
+
+/* Ticket perforation */
+.ticket-stub::before,
+.ticket-stub::after {
+    content: "";
+    position: absolute;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #fff;
+    z-index: 2;
+}
+
+.ticket-stub::before {
+    top: -10px;
+}
+
+.ticket-stub::after {
+    bottom: -10px;
+}
+
+/* Session ID badge */
+.ticket-card .badge.bg-secondary {
+    background-color: #f1f1f1 !important;
+    color: #495057 !important;
+}
+
+/* Ticket price */
+.ticket-stub h3 {
+    font-size: 1.35rem;
+}
+
+/* Category badge */
+.ticket-stub .badge {
+    padding-inline: 0.35rem;
+    font-size: 0.65rem;
+}
+
+/* Ticket label */
+.ticket-stub .text-white-50 {
+    color: #fff !important;
+    font-size: 0.7rem;
+}
+
+/* Allow long session titles to wrap */
+.ticket-card .card-title {
+    overflow: visible;
+    white-space: normal;
+}
+
+/* Edit session button */
+.ticket-card .btn-outline-primary {
+    --bs-btn-color: #ff4d00;
+    --bs-btn-border-color: #ff4d00;
+
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #000;
+    --bs-btn-hover-border-color: #000;
+
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #000;
+    --bs-btn-active-border-color: #000;
+}

@@ -1,24 +1,37 @@
-// server/server.js
-// Setup:  npm init -y && npm install express cors
-// Run:    node server.js   (listens on http://localhost:3001)
+
+ // server/server.js
+// Setup: npm init -y && npm install express cors mongoose dotenv
+// Run: node server.js (listens on http://localhost:3001)
+
+require("dotenv").config();
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
-const fs = require("fs");
 const path = require("path");
 
-const app = express();
-const PORT = 3001;
-const DATA_FILE = path.join(__dirname, "data", "submissions.json");
-const CATEGORIES = ["Keynote", "Workshop", "Panel", "Lightning Talk", "Technology", "Other"];
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// OLD JSON FILE IMPORT
+// const fs = require("fs");
 
-fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, "[]");
-const load = () => JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
-const save = (rows) => fs.writeFileSync(DATA_FILE, JSON.stringify(rows, null, 2));
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// OLD JSON FILE SETTINGS
+// const DATA_FILE = path.join(__dirname, "data", "submissions.json");
+// const CATEGORIES = ["Keynote", "Workshop", "Panel", "Lightning Talk", "Technology", "Other"];
+// const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// OLD JSON FILE FUNCTIONS
+// fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+// if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, "[]");
+// const load = () => JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+// const save = (rows) => fs.writeFileSync(DATA_FILE, JSON.stringify(rows, null, 2));
 
 app.use(cors({ origin: ["http://localhost:3000", "http://localhost:5173"] })); // CRA / Vite
 app.use(express.json());
+
+/*
+OLD JSON SUBMISSION ROUTES
+These routes are commented out because submissions now use MongoDB.
 
 // List submissions (optionally ?status=pending)
 app.get("/submissions", (req, res) => {
@@ -54,7 +67,7 @@ app.post("/submissions", (req, res) => {
   res.status(201).json(saved);
 });
 
-// Approve / reject: PATCH /submissions/:id  with body { "status": "approved" | "rejected" }
+// Approve / reject: PATCH /submissions/:id with body { "status": "approved" | "rejected" }
 app.patch("/submissions/:id", (req, res) => {
   const { status } = req.body || {};
   if (!["approved", "rejected", "pending"].includes(status)) {
@@ -68,5 +81,34 @@ app.patch("/submissions/:id", (req, res) => {
   save(rows);
   res.json(item);
 });
+*/
 
-app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+// Serve the built React app (if you run `npm run build` in the client)
+const DIST_DIR = path.join(__dirname, "..", "dist");
+
+// EXISTING SESSIONS ROUTES
+app.use("/sessions", require("./routes/sessions"));
+
+// NEW MONGODB SUBMISSIONS ROUTES
+app.use("/submissions", require("./routes/submissions"));
+
+app.use(express.static(DIST_DIR));
+
+// Fallback to index.html for SPA routing
+app.use((req, res, next) => {
+  if (req.method !== "GET") return next();
+  res.sendFile(path.join(DIST_DIR, "index.html"), (err) => err && next());
+});
+
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("Connected to MongoDB: ", mongoose.connection.name);
+    // Start the server
+    app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB: ", err.message);
+    process.exit(1);
+  });

@@ -1,0 +1,10 @@
+
+/* =========================================
+   ATTENDEE SIGN-UP PAGE
+   ========================================= */
+
+/* Fix signup card extending beyond row */
+.row.justify-content-center > .card {
+    width: calc(100% - 1.5rem);
+    margin-inline: 0.75rem;
+}

@@ -1,0 +1,101 @@
+
+/* =========================================
+   HOME PAGE
+   ========================================= */
+
+/* Image placeholders */
+.placeholder-img {
+    background-color: #d9d9d9;
+    width: 100%;
+}
+
+.placeholder-hero {
+    height: 400px;
+    margin-bottom: 2rem;
+}
+
+.placeholder-banner {
+    height: 350px;
+    margin-top: 2rem;
+}
+
+/* Hero */
+.hero-header {
+    font-weight: 700;
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.hero-sub {
+    font-weight: 700;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* Call to action */
+.btn-cta {
+    background-color: #ff4d00;
+    color: #fff;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.btn-cta:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+/* Section headings */
+.section-heading {
+    font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+/* Event information strip */
+.event-strip {
+    border-top: 3px solid #000;
+    border-bottom: 3px solid #000;
+}
+
+.strip-label {
+    color: #ff4d00;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.strip-value {
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+}
+
+/* Featured sessions */
+.feature-card {
+    border: 1px solid #e3e3e3;
+    border-left: 4px solid #ff4d00;
+    background-color: #fff;
+}
+
+/* How It Works */
+.step-number {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #ff4d00;
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+}

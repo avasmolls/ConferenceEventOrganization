@@ -1,0 +1,16 @@
+
+/* =========================================
+   CONFERENCE REGISTRATION PAGE
+   ========================================= */
+
+/* Registration form card */
+form:has(#fullName) {
+    padding: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    background-color: #fff;
+    border: 1px solid var(--bs-border-color-translucent);
+    border-radius: var(--bs-border-radius);
+    box-shadow: var(--bs-box-shadow-sm);
+}
