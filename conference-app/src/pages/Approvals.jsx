@@ -8,7 +8,7 @@ const SUBMISSIONS_URL =
     : "/submissions");
 
 const submissionId = (submission) => submission.id ?? submission._id;
-
+const STATUS_FILTERS = ["all", "pending", "approved", "rejected"];
 // Service layer
 // GET- Load submissions
 async function getSubmissions(signal) {
@@ -76,7 +76,8 @@ export default function Approvals() {
   // Edit state
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState(null);
-
+  // Filter state
+  const [statusFilter, setStatusFilter] = useState("all");
   // GET submissions
   useEffect(() => {
     const controller = new AbortController();
@@ -214,11 +215,32 @@ export default function Approvals() {
   };
 
   const label = (status) => status.charAt(0).toUpperCase() + status.slice(1);
+  // Filtering and counts
+  const countFor = (status) =>
+    status === "all"
+      ? submissions.length
+      : submissions.filter((s) => s.status === status).length;
 
+  const visibleSubmissions =
+    statusFilter === "all"
+      ? submissions
+      : submissions.filter((s) => s.status === statusFilter);
   return (
     <div className="container mt-4">
       <h2>Session Proposal Approvals</h2>
-
+      {/* Filter Buttons */}
+      <div className="btn-group mb-4" role="group" aria-label="Filter by status">
+        {STATUS_FILTERS.map((f) => (
+          <button
+            key={f}
+            type="button"
+            className={`btn ${statusFilter === f ? "btn-primary" : "btn-outline-primary"}`}
+            onClick={() => setStatusFilter(f)}
+          >
+            {label(f)} ({countFor(f)})
+          </button>
+        ))}
+      </div>
       {loadError && (
         <div className="alert alert-danger">{loadError}</div>
       )}
@@ -230,7 +252,7 @@ export default function Approvals() {
         <p>No proposals have been submitted yet.</p>
       )}
 
-      {submissions.map((s) => (
+      {visibleSubmissions.map((s) => (
         <div className="card p-3 mt-3" key={submissionId(s)}>
           <h4>{s.title}</h4>
 
