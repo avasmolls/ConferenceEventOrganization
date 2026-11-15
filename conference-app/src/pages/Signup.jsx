@@ -1,39 +1,71 @@
 import { useEffect, useState } from "react";
 
+const ATTENDEES_URL = "http://localhost:3001/attendees";
 const EMPTY = { email: "", name: "", age: "", company: "" };
 
 
 export default function Signup() {
     const [form, setForm] = useState(EMPTY);
     const [search, setSearch] = useState("");
-    const [attendees, setAttendees] = useState(() => {
-        try { return JSON.parse(localStorage.getItem("attendees") || "[]"); }
-        catch { return []; }
-    });
+    const [attendees, setAttendees] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+    // GET Request
     // replaces localStorage.setItem inside validateData()
     useEffect(() => {
-        localStorage.setItem("attendees", JSON.stringify(attendees));
-    }, [attendees]);
+        fetch(ATTENDEES_URL)
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to fetch attendees");
+                return res.json();
+            })
+            .then((data) => {
+setAttendees(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, []);
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-    function validateData(e) {
+    async function validateData(e) {
         e.preventDefault();
+        setError(null);
 
-        const rexAge = /\d{1,3}/;
+        const rexAge = /^\d{1,3}$/;
         const rexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}$/;
         const rexName = /^[a-zA-Z]+\s[a-zA-Z]+$/;
         const rexCompany = /\w+/;
 
-        if (!rexAge.test(form.age)) return alert("Not a number or null");
+        if (!rexAge.test(form.age)) return alert("Age must be a valid number");
         if (!rexEmail.test(form.email)) return alert("Invalid email format");
         if (!rexName.test(form.name)) return alert("Invalid name format");
         if (!rexCompany.test(form.company)) return alert("Invalid company name");
 
-        setAttendees([...attendees, { ...form }]);
+        // POST Request
+        try {
+            const res = await fetch(ATTENDEES_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Failed to create attendee");
+        }
+
+        const savedAttendee = await res.json();
+        setAttendees([...attendees, savedAttendee]);
         setForm(EMPTY);
     }
+    catch (err) {
+        setError(err.message);
+    }
+}
 
     const term = search.toLowerCase();
     const visible = attendees.filter((a) =>
@@ -47,7 +79,7 @@ export default function Signup() {
                 <div className="row justify-content-center">
                     <div className="card shadow-sm p-4">
                         <h2 className="text-center mb-4">Attendee Sign Up</h2>
-
+                        {error && <div className="alert alert-danger">{error}</div>}
                         <form id="signupForm" onSubmit={validateData}>
                             <div className="mb-3">
                                 <label htmlFor="tbEmail" className="form-label">Email:</label>
@@ -103,8 +135,8 @@ export default function Signup() {
                         </tr>
                     </thead>
                     <tbody id="attendeeList">
-                        {visible.map((a, i) => (
-                            <tr key={i}>
+                        {visible.map((a) => (
+                            <tr key={a._id || a.email}>
                                 <td>{a.name}</td>
                                 <td>{a.email}</td>
                                 <td>{a.age}</td>
