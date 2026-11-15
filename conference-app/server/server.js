@@ -3,7 +3,7 @@
 // Setup: npm init -y && npm install express cors mongoose dotenv
 // Run: node server.js (listens on http://localhost:3001)
 
-require("dotenv").config();
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
