@@ -92,6 +92,9 @@ app.use("/sessions", require("./routes/sessions"));
 // NEW MONGODB SUBMISSIONS ROUTES
 app.use("/submissions", require("./routes/submissions"));
 
+// NEW MONGODB ATTENDEES ROUTES
+app.use("/attendees", require("./routes/attendee"));
+
 app.use(express.static(DIST_DIR));
 
 // Fallback to index.html for SPA routing
