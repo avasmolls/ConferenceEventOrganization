@@ -83,6 +83,7 @@ app.patch("/submissions/:id", (req, res) => {
 });
 */
 
+
 // Serve the built React app (if you run `npm run build` in the client)
 const DIST_DIR = path.join(__dirname, "..", "dist");
 
@@ -93,7 +94,7 @@ app.use("/sessions", require("./routes/sessions"));
 app.use("/submissions", require("./routes/submissions"));
 
 // NEW MONGODB ATTENDEES ROUTES
-app.use("/attendees", require("./routes/attendee"));
+app.use("/attendees", require("./routes/attendees"));
 
 app.use(express.static(DIST_DIR));
 
