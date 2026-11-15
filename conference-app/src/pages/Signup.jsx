@@ -11,6 +11,7 @@ export default function Signup() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // GET Request
     // replaces localStorage.setItem inside validateData()
     useEffect(() => {
         fetch(ATTENDEES_URL)
@@ -19,7 +20,7 @@ export default function Signup() {
                 return res.json();
             })
             .then((data) => {
-                setAttendees(data);
+setAttendees(data);
                 setLoading(false);
             })
             .catch((err) => {
@@ -44,6 +45,7 @@ export default function Signup() {
         if (!rexName.test(form.name)) return alert("Invalid name format");
         if (!rexCompany.test(form.company)) return alert("Invalid company name");
 
+        // POST Request
         try {
             const res = await fetch(ATTENDEES_URL, {
                 method: "POST",
@@ -133,8 +135,8 @@ export default function Signup() {
                         </tr>
                     </thead>
                     <tbody id="attendeeList">
-                        {visible.map((a, i) => (
-                            <tr key={a.id || a.email}>
+                        {visible.map((a) => (
+                            <tr key={a._id || a.email}>
                                 <td>{a.name}</td>
                                 <td>{a.email}</td>
                                 <td>{a.age}</td>
