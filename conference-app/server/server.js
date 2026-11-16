@@ -106,7 +106,7 @@ app.use((req, res, next) => {
 
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/conferenceDB")
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Connected to MongoDB: ", mongoose.connection.name);
     // Start the server
