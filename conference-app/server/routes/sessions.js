@@ -27,7 +27,7 @@ router.get("/:id", async (req, res) => {
 // Add a session
 router.post("/", async (req, res) => {
   try {
-    const session = await Session.create(req.body);
+    const session = await Session.create({ id: Date.now(), ...req.body });
     res.status(201).json(session);
   } catch (err) {
     res.status(400).json({ error: err.message });
