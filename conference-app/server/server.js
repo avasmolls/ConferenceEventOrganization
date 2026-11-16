@@ -94,7 +94,7 @@ app.use("/sessions", require("./routes/sessions"));
 app.use("/submissions", require("./routes/submissions"));
 
 // NEW MONGODB ATTENDEES ROUTES
-app.use("/attendees", require("./routes/attendees"));
+app.use("/attendees", require("./routes/attendee"));
 
 app.use(express.static(DIST_DIR));
 
@@ -106,7 +106,7 @@ app.use((req, res, next) => {
 
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect("mongodb://localhost:27017/conferenceDB")
   .then(() => {
     console.log("Connected to MongoDB: ", mongoose.connection.name);
     // Start the server
