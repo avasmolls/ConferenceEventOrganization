@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Configuration
-const USE_API = true; // set to true to use the API instead of local storage
+const SUBMISSIONS_URL =
+  import.meta.env.VITE_SUBMISSIONS_URL ||
+  (import.meta.env.DEV
+    ? "http://localhost:3001/submissions"
+    : "/submissions");
 
-const SUBMISSIONS_URL = "http://localhost:3001/submissions";
-const LOCAL_STORAGE_KEY = "conferenceSubmissions";
+const submissionId = (submission) => submission.id ?? submission._id;
 
 const CATEGORIES = ["Keynote", "Workshop", "Panel", "Lightning Talk", "Technology", "Other"];
 
@@ -18,28 +21,56 @@ const initialForm = {
 
 // Service layer
 
+// POST- Create a submission
 async function postSubmission(payload) {
-  if (USE_API) {
-    const res = await fetch(SUBMISSIONS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error(`Registration failed (${res.status})`);
-    return res.json();
+  const res = await fetch(SUBMISSIONS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to submit proposal (${res.status})`);
   }
 
-  // Local fallback: simulate network latency and save to localStorage
-  await new Promise((resolve) => setTimeout(resolve, 600));
-  const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
-  const saved = {
-    id: Date.now(),
-    ...payload,
-    status: "pending",
-    submittedAt: new Date().toISOString(),
-  };
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...existing, saved]));
-  return saved;
+  return res.json();
+}
+
+// GET- Retrieve existing submissions
+async function getSubmissions(signal) {
+  const res = await fetch(SUBMISSIONS_URL, { signal });
+
+  if (!res.ok) {
+    throw new Error(`Failed to load proposals (${res.status})`);
+  }
+
+  return res.json();
+}
+
+// PUT- Edit an existing submission
+async function putSubmission(id, payload) {
+  const res = await fetch(`${SUBMISSIONS_URL}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to edit proposal (${res.status})`);
+  }
+
+  return res.json();
+}
+
+// DELETE- Remove a submission
+async function deleteSubmission(id) {
+  const res = await fetch(`${SUBMISSIONS_URL}/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to delete proposal (${res.status})`);
+  }
 }
 
 // Component
@@ -50,7 +81,29 @@ export default function Submissions() {
   const [submitError, setSubmitError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
+  // Existing proposals
+  const [submissions, setSubmissions] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [listError, setListError] = useState(null);
+  const [saveWasEdit, setSaveWasEdit] = useState(false);
 
+  // Load submissions from backend
+  useEffect(() => {
+    const controller = new AbortController();
+
+    getSubmissions(controller.signal)
+      .then((data) => {
+        setSubmissions(data);
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          setListError(err.message);
+        }
+      });
+
+    return () => controller.abort();
+  }, []);
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -60,6 +113,52 @@ export default function Submissions() {
     setSubmitted(false);
     setSubmitError(null);
     setErrors({});
+    setEditingId(null);
+  };
+
+  // Edit an existing proposal
+  const handleEdit = (submission) => {
+    setEditingId(submissionId(submission));
+
+    setForm({
+      title: submission.title,
+      speaker: submission.speaker,
+      email: submission.email,
+      category: submission.category,
+      abstract: submission.abstract,
+    });
+
+    setSubmitted(false);
+    setErrors({});
+    setSubmitError(null);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Delete an existing proposal
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this proposal permanently?")) {
+      return;
+    }
+
+    setListError(null);
+    setDeletingId(id);
+
+    try {
+      await deleteSubmission(id);
+
+      setSubmissions((prev) =>
+        prev.filter((s) => submissionId(s) !== id)
+      );
+
+      if (editingId === id) {
+        handleReset();
+      }
+    } catch (err) {
+      setListError(err.message);
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -106,41 +205,65 @@ export default function Submissions() {
       return;
     }
 
-    // Submit
-    setSubmitting(true);
-    try {
-      await postSubmission({
-        title: form.title.trim(),
-        speaker: form.speaker.trim(),
-        email: form.email.trim(),
-        category: form.category,
-        abstract: form.abstract.trim(),
-      });
-      setSubmitted(true);
-    } catch (err) {
-      setSubmitError(err.message || "Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    // Submit or update proposal
+  setSubmitting(true);
+
+  try {
+    const payload = {
+      title: form.title.trim(),
+      speaker: form.speaker.trim(),
+      email: form.email.trim(),
+      category: form.category,
+      abstract: form.abstract.trim(),
+    };
+
+    const wasEditing = editingId !== null;
+
+    const saved = wasEditing
+      ? await putSubmission(editingId, payload)
+      : await postSubmission(payload);
+
+    setSubmissions((prev) =>
+      wasEditing
+        ? prev.map((s) =>
+            submissionId(s) === editingId ? saved : s
+          )
+        : [...prev, saved]
+    );
+
+    setSaveWasEdit(wasEditing);
+    setSubmitted(true);
+  } catch (err) {
+    setSubmitError(err.message || "Something went wrong. Please try again.");
+  } finally {
+    setSubmitting(false);
+  }
+};
   
 
   if (submitted) {
-    return (
-      <div className="container mt-4">
-        <div className="alert alert-success">
-          Thanks, {form.speaker}! Your session proposal "{form.title}" has been submitted for review.
-        </div>
-        <button className="btn btn-secondary" onClick={handleReset}>
-          Submit Another Proposal
-        </button>
+  return (
+    <div className="container mt-4">
+      <div className="alert alert-success">
+        {saveWasEdit
+          ? `Your proposal "${form.title}" has been updated.`
+          : `Thanks, ${form.speaker}! Your session proposal "${form.title}" has been submitted for review.`}
       </div>
-    );
-  }
+
+      <button className="btn btn-secondary" onClick={handleReset}>
+        Return to Proposals
+      </button>
+    </div>
+  );
+}
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">Submit a Session Proposal</h2>
+      <h2 className="mb-4">
+        {editingId !== null
+          ? "Edit a Session Proposal"
+          : "Submit a Session Proposal"}
+      </h2>
 
       {submitError && (
         <div className="alert alert-danger">{submitError}</div>
@@ -227,11 +350,80 @@ export default function Submissions() {
           {errors.abstract && <div className="text-danger small mt-1">{errors.abstract}</div>}
         </div>
 
-        {/* Submit Button */}
-        <button type="submit" className="btn btn-primary w-100 py-2" disabled={submitting}>
-          {submitting ? "Submitting..." : "Submit Proposal"}
+        {/* Submit or Save */}
+        <button
+          type="submit"
+          className="btn btn-primary w-100 py-2"
+          disabled={submitting}
+        >
+          {submitting
+            ? "Saving..."
+            : editingId !== null
+            ? "Save Changes"
+            : "Submit Proposal"}
         </button>
-      </form>
+
+        {editingId !== null && (
+          <button
+            type="button"
+            className="btn btn-outline-secondary mt-2"
+            onClick={handleReset}
+          >
+            Cancel Editing
+          </button>
+        )}
+        </form>
+        {/* Existing proposals */}
+<h3 className="mt-5">Existing Proposals</h3>
+
+{listError && (
+  <div className="alert alert-danger">{listError}</div>
+)}
+
+{submissions.length === 0 && !listError && (
+  <p>No proposals yet.</p>
+)}
+
+{submissions.map((s) => (
+  <div
+    className="card p-3 mb-3"
+    key={submissionId(s)}
+  >
+    <h4 className="h5">{s.title}</h4>
+
+    <p className="mb-1">
+      {s.speaker} · {s.category} · {s.status}
+    </p>
+
+    <p>{s.abstract}</p>
+
+    <div className="d-flex gap-2">
+      <button
+        type="button"
+        className="btn btn-outline-primary btn-sm"
+        onClick={() => handleEdit(s)}
+        disabled={
+          submitting || deletingId === submissionId(s)
+        }
+      >
+        Edit
+      </button>
+
+      <button
+        type="button"
+        className="btn btn-outline-danger btn-sm"
+        onClick={() => handleDelete(submissionId(s))}
+        disabled={
+          deletingId === submissionId(s) || submitting
+        }
+      >
+        {deletingId === submissionId(s)
+          ? "Deleting..."
+          : "Delete"}
+      </button>
     </div>
-  );
+  </div>
+))}
+      </div>
+    );
 }
