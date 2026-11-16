@@ -94,7 +94,7 @@ app.use("/sessions", require("./routes/sessions"));
 app.use("/submissions", require("./routes/submissions"));
 
 // NEW MONGODB ATTENDEES ROUTES
-app.use("/attendees", require("./routes/attendee"));
+app.use("/attendees", require("./routes/attendees"));
 
 app.use(express.static(DIST_DIR));
 
