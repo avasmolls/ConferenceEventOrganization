@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 
 const FIELDS = ["productId", "productDescription", "productCategory", "productUnit", "productPrice"];
 const EMPTY_FORM = Object.fromEntries(FIELDS.map((f) => [f, ""]));
@@ -7,14 +7,15 @@ const EMPTY_FORM = Object.fromEntries(FIELDS.map((f) => [f, ""]));
 function validateField(id, raw) {
     const value = raw.trim();
     const rexID = /^\d+$/;
-    const rexDesc = /[A-Za-z0-9\s\-',.&:()]*$/;
+    const rexDesc = /^[A-Za-z0-9\s\-',.&:()]+$/;
     const rexAlphaNum = /^[a-zA-Z0-9\s]+$/;
     const rexPrice = /^[0-9]+(\.[0-9]{1,2})?$/;
 
     switch (id) {
         case "productId":
             if (value === "") return "Product ID is required.";
-            if (!rexID.test(value)) return "Product ID must be a whole number greater than 0.";
+            if (!rexID.test(value) || Number(value) <= 0) 
+                return "Product ID must be a whole number greater than 0.";
             return "";
         case "productDescription":
             if (value === "") return "Description is required.";
@@ -27,11 +28,13 @@ function validateField(id, raw) {
             return "";
         case "productUnit":
             if (value === "") return "Unit of Measure is required.";
-            if (!rexAlphaNum.test(value)) return "Unit of Measure must be alphanumeric.";
+            if (!rexAlphaNum.test(value)) 
+                return "Unit of Measure must be alphanumeric.";
             return "";
         case "productPrice":
             if (value === "") return "Price is required.";
-            if (!rexPrice.test(value)) return "Price must be a valid number with at most 2 decimal places.";
+            if (!rexPrice.test(value)) 
+                return "Price must be a valid number with at most 2 decimal places.";
             return "";
         default:
             return "";
@@ -43,7 +46,8 @@ export default function Cart() {
     const [loaded, setLoaded] = useState(false);
     const [loadError, setLoadError] = useState(false);
 
-    const [cart, setCart] = useState([]);
+    const [cartData, setCartData] = useState({ items: [], subtotal: 0, totalQuantity: 0});
+    const [busyId, setBusyId] = useState(null);
     const [query, setQuery] = useState("");
 
     const [form, setForm] = useState(EMPTY_FORM);
@@ -52,22 +56,39 @@ export default function Cart() {
 
     const [apiMessage, setApiMessage] = useState("");
 
-    // replaces $.getJSON("sessions.json")
-    useEffect(() => {
-        fetch("/sessions.json")
-            .then((r) => {
-                if (!r.ok) throw new Error("bad response");
-                return r.json();
-            })
-            .then((data) => {
-                setProducts(data);
-                setLoaded(true);
-            })
-            .catch(() => {
-                setLoadError(true);
-                setLoaded(true);
-            });
+    const loadSessions = useCallback(async () => { 
+        try {
+            const res = await fetch("/sessions");
+            if (!res.ok) throw new Error("Failed to load sessions");
+            const data = await res.json();
+            setProducts(Array.isArray(data) ? data : []);
+            setLoadError(false);
+        } catch {
+            setLoadError(true);
+        } finally {
+            setLoaded(true);
+        }
     }, []);
+
+    const loadCart = useCallback(async () => {
+        try {
+            const res = await fetch("/cart");
+            if (!res.ok) throw new Error("Failed to load cart");
+            const data = await res.json();
+            setCartData({
+                items: Array.isArray(data.items) ? data.items : [],
+                subtotal: Number(data.subtotal || 0),
+                totalQuantity: Number(data.totalQuantity || 0),
+            });
+        } catch {
+            setApiMessage("Could not load persisted cart from server.")
+        }
+    }, []);
+    
+    useEffect(() => {
+        loadSessions();
+        loadCart();
+    }, [loadSessions, loadCart]);
 
     // The sessions shown in "Available Sessions", built from sessions.json
     const sessions = products.map((p) => ({
@@ -76,13 +97,77 @@ export default function Cart() {
         price: Number(p.price),
     }));
 
-    /* ---------- cart ---------- */
-    const inCart = (id) => cart.some((i) => i.id === id);
-    const addToCart = (s) => {
-        if (!inCart(s.id)) setCart([...cart, s]);
+    /* ---------- cart actions ---------- */
+    const getCartItem = (sessionId) =>
+        cartData.items.find((item) => Number(item.sessionId) === Number(sessionId));
+
+    
+    const addToCart = async (session) => {
+        setBusyId(session.id);
+        setApiMessage("");
+        try {
+            const res = await fetch("/cart/items", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sessionId: session.id, quantity: 1}),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Could not add item to cart.");
+            setCartData(data);
+        } catch (err) {
+            setApiMessage(err.message);
+        } finally {
+            setBusyId(null);
+        }
     };
-    const removeFromCart = (id) => setCart(cart.filter((i) => i.id !== id));
-    const total = cart.reduce((sum, i) => sum + i.price, 0);
+
+    const updateQuantity = async (sessionId, quantity) => {
+        setBusyId(sessionId);
+        setApiMessage("");
+        try {
+            const res = await fetch(`/cart/items/${sessionId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ quantity }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Could not update quantity.");
+            setCartData(data);
+        } catch (err) {
+            setApiMessage(err.message);
+        } finally {
+            setBusyId(null);
+        }
+    };
+
+    const removeFromCart = async (sessionId) => {
+        setBusyId(sessionId);
+        setApiMessage("");
+        try {
+            const res = await fetch(`/cart/items/${sessionId}`, {
+                method: "DELETE",
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Could not remove item.");
+            setCartData(data);
+        } catch (err) {
+            setApiMessage(err.message);
+        } finally {
+            setBusyId(null);
+        }
+    };
+
+    const clearCart = async () => {
+        setApiMessage("");
+        try {
+            const res = await fetch("/cart", { method: "DELETE" });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Could not clear cart.");
+            setCartData(data);
+        } catch (err) {
+            setApiMessage(err.message);
+        }
+    }
 
     // Matches the original: filters on the "Name - $price" text
     const term = query.toLowerCase().trim();
@@ -122,30 +207,61 @@ export default function Cart() {
         return true;
     }
 
-    const handleSubmit = (e) => {
+    // Note: Since title and description are both attached to productDescription, they pull from the same field
+    const buildSessionPayload = () => ({
+        id: Number(form.productId.trim()),
+        title: form.productDescription.trim(),
+        description: form.productDescription.trim(),
+        category: form.productCategory.trim(),
+        unit: form.productUnit.trim(),
+        format: "In-Person",
+        price: Number(form.productPrice.trim()),
+    });
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        validateProductForm();
+        if (!validateProductForm()) return;
+
+        try {
+            const payload = buildSessionPayload();
+            const res = await fetch("/sessions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Failed to create session.");
+
+            setFormMessage({ cls: "text-success", lines: ["Session created in database."] });
+            setForm(EMPTY_FORM);
+            setFieldState({});
+            await loadSessions();
+        } catch (err) {
+            setFormMessage({ cls: "text-danger", lines: [err.message] });
+        }
     };
-    const handleUpdate = () => {
-        validateProductForm();
+    const handleUpdate = async () => {
+        if (!validateProductForm()) return;
+
+        try {
+            const payload = buildSessionPayload();
+            const res = await fetch(`/sessions/${payload.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Failed to update session.");
+
+            setFormMessage({ cls: "text-success", lines: ["Session updated in database."] });
+            await loadSessions();
+            await loadCart();
+        } catch (err) {
+            setFormMessage({ cls: "text-danger", lines: [err.message] });
+        }
     };
 
     const fieldClass = (id) => `form-control ${fieldState[id] || ""}`.trim();
-
-    /* ---------- API ---------- */
-    async function sendProducts() {
-        try {
-            const res = await fetch("/api/products", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(products),
-            });
-            if (!res.ok) throw new Error("bad response");
-            setApiMessage("Products sent successfully!");
-        } catch {
-            setApiMessage("API not available yet.");
-        }
-    }
 
     return (
         <div className="container mt-4">
@@ -169,21 +285,26 @@ export default function Cart() {
             {/* Sessions (Fragment keeps each <p> and button as direct children of the grid) */}
             <h3>Available Sessions</h3>
             <div id="productList">
-                {visibleSessions.map((s) => (
-                    <Fragment key={s.id}>
-                        <p>{s.name} - ${s.price}</p>
-                        <button
-                            className="addToCart"
-                            disabled={inCart(s.id)}
-                            onClick={() => addToCart(s)}
-                        >
-                            {inCart(s.id) ? "Added" : "Add to Cart"}
-                        </button>
-                    </Fragment>
-                ))}
+                {visibleSessions.map((s) => {
+                    const existingItem = getCartItem(s.id);
+                    return (
+                        <Fragment key={s.id}>
+                            <p>{s.name} - ${s.price}</p>
+                            <button
+                                className="addToCart"
+                                disabled={busyId === s.id}
+                                onClick={() => addToCart(s)}
+                            >
+                                {existingItem
+                                    ? `Add Another (${existingItem.quantity} in cart)`
+                                    : "Add to Cart"}
+                            </button>
+                        </Fragment>
+                    );
+                })}
 
                 {loadError && (
-                    <p id="noResults" className="text-danger">Could not load sessions.json</p>
+                    <p id="noResults" className="text-danger">Could not load sessions from server.</p>
                 )}
                 {loaded && !loadError && visibleSessions.length === 0 && (
                     <p id="noResults" className="text-muted">No sessions found.</p>
@@ -199,34 +320,59 @@ export default function Cart() {
                     <tr>
                         <th>Session</th>
                         <th>Price</th>
+                        <th>Qty</th>
+                        <th>Line Total</th>
                         <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody id="cartItems">
-                    {cart.length === 0 && (
+                    {cartData.items.length === 0 && (
                         <tr>
-                            <td colSpan="3" className="text-muted">Your cart is empty.</td>
+                            <td colSpan="5" className="text-muted">Your cart is empty.</td>
                         </tr>
                     )}
-                    {cart.map((item) => (
-                        <tr key={item.id}>
-                            <td>{item.name}</td>
-                            <td>${item.price.toFixed(2)}</td>
+                    {cartData.items.map((item) => (
+                        <tr key={item.sessionId}>
+                            <td>{item.title}</td>
+                            <td>${Number(item.price).toFixed(2)}</td>
                             <td>
                                 <button
-                                    type="button"
-                                    className="removeFromCart"
-                                    onClick={() => removeFromCart(item.id)}
+                                    type="button" 
+                                    disabled={busyId === item.sessionId || Number(item.quantity) <= 1}
+                                    onClick={() => updateQuantity(item.sessionId, item.quantity - 1)}
+                                    >
+                                        -
+                                    </button>
+                                <span>{item.quantity}</span>
+                                <button type="button" 
+                                disabled={busyId === item.sessionId}
+                                onClick={() => updateQuantity(item.sessionId, item.quantity + 1)}
                                 >
-                                    Remove
+                                    +
                                 </button>
                             </td>
+                            <td>${Number(item.lineTotal ?? item.price * item.quantity).toFixed(2)}</td>
+                        <td>
+                            <button
+                                type="button"
+                                className="removeFromCart"
+                                onClick={() => removeFromCart(item.sessionId)}
+                            >
+                                Remove
+                            </button>
+                        </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            <p>Total: $<span id="cartTotal">{total.toFixed(2)}</span></p>
+            <p>Items: <span id="cartQuantity">{cartData.totalQuantity}</span></p>
+            <p>Total: $<span id="cartTotal">{Number(cartData.subtotal || 0).toFixed(2)}</span></p>
+            {cartData.items.length > 0 && (
+                <button type="button" id="clearCart" onClick={clearCart}>
+                    Clear Cart
+                </button>
+            )}
 
             <hr />
 
@@ -305,10 +451,7 @@ export default function Cart() {
                 ))}
             </p>
 
-            <button type="button" id="sendProducts" onClick={sendProducts}>
-                Send Products to API
-            </button>
-            <p id="apiMessage">{apiMessage}</p>
+            <p id="apiMessage" className="text-danger">{apiMessage}</p>
         </div>
     );
 }
