@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
-import "./Cart.css";
+import "../styles/Cart.css";
 
 const FIELDS = ["productId", "productDescription", "productCategory", "productUnit", "productPrice"];
 const EMPTY_FORM = Object.fromEntries(FIELDS.map((f) => [f, ""]));
