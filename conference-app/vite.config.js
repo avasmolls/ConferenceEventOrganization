@@ -7,7 +7,15 @@ export default defineConfig({
   server: {
     proxy: {
       "/sessions": "http://localhost:3001",
-      "/cart": "http://localhost:3001",
+      "/cart": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+        bypass(req) {
+          if (req.headers.accept && req.headers.accept.includes("text/html")) {
+            return "/index.html";
+          }
+        },
+      },
     },
   },
 })
