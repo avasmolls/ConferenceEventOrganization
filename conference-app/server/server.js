@@ -89,6 +89,8 @@ const DIST_DIR = path.join(__dirname, "..", "dist");
 
 // EXISTING SESSIONS ROUTES
 app.use("/sessions", require("./routes/sessions"));
+
+// NEW MONGODB CART ROUTES
 app.use("/cart", require("./routes/cart"));
 
 // NEW MONGODB SUBMISSIONS ROUTES
@@ -117,4 +119,3 @@ mongoose
     console.error("Failed to connect to MongoDB: ", err.message);
     process.exit(1);
   });
-
