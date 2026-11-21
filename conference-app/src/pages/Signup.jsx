@@ -10,6 +10,9 @@ export default function Signup() {
     const [attendees, setAttendees] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [editingId, setEditingId] = useState(null);
+    const [message, setMessage] = useState("");
+
 
     // GET Request
     // replaces localStorage.setItem inside validateData()
@@ -31,36 +34,104 @@ setAttendees(data);
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
+
+    // EDIT: Fill the form with the selected attendee
+    function handleEdit(attendee) {
+        setEditingId(attendee.id);
+        setForm({
+            email: attendee.email,
+            name: attendee.name,
+            age: String(attendee.age),
+            company: attendee.company
+        });
+        setError(null);
+        setMessage("");
+        window.scrollTo(0, 0);
+    }
+
+    // Cancel editing and clear the form
+    function cancelEdit() {
+        setEditingId(null);
+        setForm(EMPTY);
+    }
+
+    // DELETE Request
+    async function handleDelete(id) {
+        if (!window.confirm("Delete this attendee?")) return;
+
+        setError(null);
+        setMessage("");
+
+        try {
+            const res = await fetch(ATTENDEES_URL + "/" + id, {
+                method: "DELETE"
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Failed to delete attendee");
+            }
+
+            setAttendees((current) =>
+                current.filter((a) => a.id !== id)
+            );
+
+            if (editingId === id) cancelEdit();
+            setMessage("Attendee deleted successfully.");
+        } catch (err) {
+            setError(err.message);
+        }
+    }
+
+
     async function validateData(e) {
         e.preventDefault();
         setError(null);
+        setMessage("");
 
         const rexAge = /^\d{1,3}$/;
         const rexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}$/;
         const rexName = /^[a-zA-Z]+\s[a-zA-Z]+$/;
         const rexCompany = /\w+/;
 
-        if (!rexAge.test(form.age)) return alert("Age must be a valid number");
+
+        if (!rexAge.test(form.age) || Number(form.age) < 1 || Number(form.age) > 100)
+            return alert("Age must be between 1 and 100");
         if (!rexEmail.test(form.email)) return alert("Invalid email format");
         if (!rexName.test(form.name)) return alert("Invalid name format");
         if (!rexCompany.test(form.company)) return alert("Invalid company name");
 
-        // POST Request
+        const editing = editingId !== null;
+        // POST creates an attendee, PUT updates an attendee
         try {
-            const res = await fetch(ATTENDEES_URL, {
-                method: "POST",
+            const url = editing ? ATTENDEES_URL + "/" + editingId : ATTENDEES_URL;
+
+            const res = await fetch(url, {
+                method: editing ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, age: Number(form.age) }),
             });
+
 
         if (!res.ok) {
             const errorData = await res.json();
-            throw new Error(errorData.error || "Failed to create attendee");
+            throw new Error(errorData.error || "Failed to save attendee");
         }
 
+       
         const savedAttendee = await res.json();
-        setAttendees([...attendees, savedAttendee]);
-        setForm(EMPTY);
+
+        if (editing) {
+            setAttendees(attendees.map((a) =>
+                a.id === editingId ? savedAttendee : a
+            ));
+        } else {
+            setAttendees([...attendees, savedAttendee]);
+        }
+
+        cancelEdit();
+        setMessage(editing ? "Attendee updated successfully." : "Account created successfully.");
+
     }
     catch (err) {
         setError(err.message);
@@ -78,8 +149,11 @@ setAttendees(data);
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="card shadow-sm p-4">
-                        <h2 className="text-center mb-4">Attendee Sign Up</h2>
+                        <h2 className="text-center mb-4">
+                            {editingId !== null ? "Edit Attendee" : "Attendee Sign Up"}
+                        </h2>
                         {error && <div className="alert alert-danger">{error}</div>}
+                        {message && <div className="alert alert-success">{message}</div>}
                         <form id="signupForm" onSubmit={validateData}>
                             <div className="mb-3">
                                 <label htmlFor="tbEmail" className="form-label">Email:</label>
@@ -106,8 +180,19 @@ setAttendees(data);
                             </div>
 
                             <button id="btnSubmit" type="submit" className="btn btn-primary w-100">
-                                Create Account
+                                     {editingId !== null ? "Save Changes" : "Create Account"}
                             </button>
+
+                        {editingId !== null && (
+                            <button
+                                type="button"
+                                className="btn btn-secondary w-100 mt-2"
+                                onClick={cancelEdit}
+                            >
+                                Cancel Editing
+                            </button>
+                        )}
+
                         </form>
                     </div>
                 </div>
@@ -132,16 +217,35 @@ setAttendees(data);
                             <th>Email</th>
                             <th>Age</th>
                             <th>Company</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="attendeeList">
                         {visible.map((a) => (
-                            <tr key={a._id || a.email}>
-                                <td>{a.name}</td>
-                                <td>{a.email}</td>
-                                <td>{a.age}</td>
-                                <td>{a.company}</td>
-                            </tr>
+                            
+                <tr key={a.id}>
+                    <td>{a.name}</td>
+                    <td>{a.email}</td>
+                    <td>{a.age}</td>
+                    <td>{a.company}</td>
+                    <td>
+                        <button
+                            type="button"
+                            className="btn btn-primary btn-sm me-2"
+                            onClick={() => handleEdit(a)}
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            type="button"
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleDelete(a.id)}
+                        >
+                            Delete
+                        </button>
+                    </td>
+                </tr>
                         ))}
                     </tbody>
                 </table>

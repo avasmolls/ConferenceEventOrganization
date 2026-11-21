@@ -99,7 +99,11 @@ app.use("/submissions", require("./routes/submissions"));
 // NEW MONGODB ATTENDEES ROUTES
 app.use("/attendees", require("./routes/attendees"));
 
+// NEW MONGODB REGISTRATION ROUTES
+app.use("/registrations", require("./routes/registrations"));
+
 app.use(express.static(DIST_DIR));
+
 
 // Fallback to index.html for SPA routing
 app.use((req, res, next) => {
