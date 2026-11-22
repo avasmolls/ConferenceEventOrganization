@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 // Configuration
 const USE_API = true; // set to true to use the API instead of local storage
 
-const SESSIONS_URL = "/sessions.json";
+const SESSIONS_URL = "http://localhost:3001/sessions";
 const REGISTRATIONS_URL = "http://localhost:3001/registrations"; // will be replaced with our api I just have it set to my local host for now
 const LOCAL_STORAGE_KEY = "conferenceRegistrations";
 
