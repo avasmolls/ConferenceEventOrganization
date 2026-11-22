@@ -14,3 +14,49 @@ form:has(#fullName) {
     border-radius: var(--bs-border-radius);
     box-shadow: var(--bs-box-shadow-sm);
 }
+
+/* Registration Form Responsive Improvements */
+
+form:has(#fullName) {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto 40px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+form:has(#fullName) input,
+form:has(#fullName) select,
+form:has(#fullName) textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+form:has(#fullName) button {
+  min-height: 44px;
+}
+
+/* Tablet and Mobile */
+@media (max-width: 768px) {
+  form:has(#fullName) {
+    padding: 16px;
+  }
+
+  form:has(#fullName) button[type="submit"] {
+    width: 100%;
+  }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+  form:has(#fullName) {
+    padding: 12px;
+  }
+
+  form:has(#fullName) input,
+  form:has(#fullName) select,
+  form:has(#fullName) textarea {
+    font-size: 16px;
+  }
+}

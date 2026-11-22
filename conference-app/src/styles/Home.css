@@ -99,3 +99,71 @@
     justify-content: center;
     margin-bottom: 0.75rem;
 }
+
+/* Homepage Responsive Improvements */
+
+.placeholder-hero {
+  width: 100%;
+  overflow: hidden;
+}
+
+.placeholder-hero img,
+.placeholder-banner img {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.feature-card {
+  height: 100%;
+  overflow-wrap: break-word;
+}
+
+.hero-header,
+.hero-sub {
+  overflow-wrap: break-word;
+}
+
+/* Tablet and Mobile */
+@media (max-width: 768px) {
+  .hero-header {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+  }
+
+  .feature-card {
+    padding: 16px;
+  }
+
+  .placeholder-hero {
+    max-height: 300px;
+  }
+
+  .placeholder-banner {
+    max-height: 220px;
+  }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+  .hero-header {
+    font-size: 1.6rem;
+  }
+
+  .placeholder-hero {
+    max-height: 220px;
+  }
+
+  .placeholder-banner {
+    max-height: 160px;
+  }
+
+  .btn-cta {
+    max-width: 100%;
+    white-space: normal;
+  }
+}
